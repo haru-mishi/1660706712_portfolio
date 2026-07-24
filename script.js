@@ -83,6 +83,7 @@
   const prevBtn = document.getElementById('lightboxPrev');
   const nextBtn = document.getElementById('lightboxNext');
   const closeBtn = document.getElementById('lightboxClose');
+  const thumbStripEl = document.getElementById('lightboxThumbs');
   const thumbs = document.querySelectorAll('.project-thumb');
 
   let count = 1;
@@ -90,6 +91,16 @@
   let label = 'Screenshot';
   let images = null;
   let video = null;
+
+  function renderThumbStrip() {
+    if (!images || images.length < 2) {
+      thumbStripEl.innerHTML = '';
+      return;
+    }
+    thumbStripEl.innerHTML = images
+      .map((src, i) => '<button type="button" data-index="' + i + '"><img src="' + src + '" alt=""></button>')
+      .join('');
+  }
 
   function render() {
     if (video) {
@@ -99,6 +110,9 @@
     } else {
       imageEl.textContent = label + ' ' + (index + 1) + ' / ' + count;
     }
+    thumbStripEl.querySelectorAll('button').forEach((btn, i) => {
+      btn.classList.toggle('active', i === index);
+    });
   }
 
   function open(total, startIndex, itemLabel, itemImages, itemVideo) {
@@ -107,9 +121,17 @@
     label = itemLabel || 'Screenshot';
     images = itemImages || null;
     video = itemVideo || null;
+    renderThumbStrip();
     render();
     dialog.showModal();
   }
+
+  thumbStripEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    index = parseInt(btn.dataset.index, 10);
+    render();
+  });
 
   thumbs.forEach((thumb) => {
     thumb.addEventListener('click', () => {

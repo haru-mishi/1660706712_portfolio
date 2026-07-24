@@ -229,9 +229,16 @@ section {
   background: rgba(0, 0, 0, 0.75);
 }
 
+.lightbox-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
 .lightbox-image {
   width: min(70vw, 900px);
-  height: min(70vh, 600px);
+  height: min(60vh, 520px);
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -248,6 +255,38 @@ section {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+.lightbox-thumbs {
+  display: flex;
+  gap: 8px;
+  max-width: min(70vw, 900px);
+  overflow-x: auto;
+}
+
+.lightbox-thumbs button {
+  flex-shrink: 0;
+  width: 64px;
+  height: 48px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+.lightbox-thumbs button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.lightbox-thumbs button.active {
+  border-color: var(--accent);
+  opacity: 1;
 }
 
 .lightbox-btn {

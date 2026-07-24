@@ -95,6 +95,26 @@
           </button>
           <h3>Echoes in the Dark</h3>
           <p>A short horror-themed exploration game built in GameMaker Studio, made as an object-oriented programming exercise — the player, enemies, and each interactable (locked doors, readable objects) are modeled as separate objects with their own behavior and state.</p>
+          <a class="project-link" href="https://github.com/haru-mishi/Echoes-in-the-dark" target="_blank" rel="noopener">GitHub &rarr;</a>
+        </div>
+        <div class="project-card">
+          <button type="button" class="project-thumb has-image" data-count="7" data-images="images/projects/haru-ai-hub/2.png,images/projects/haru-ai-hub/1.png,images/projects/haru-ai-hub/3.png,images/projects/haru-ai-hub/4.png,images/projects/haru-ai-hub/5.png,images/projects/haru-ai-hub/6.png,images/projects/haru-ai-hub/7.png">
+            <img src="images/projects/haru-ai-hub/2.png" alt="Haru AI Hub screenshot">
+          </button>
+          <h3>Haru AI Hub</h3>
+          <p>Self-hosted admin console for local LLMs, with role-scoped multi-user access: users manage only their own API keys and usage, while admins get full oversight across users, models, and token consumption. Each API key is restricted to an allow-list of models, and chat talks to a local Ollama instance through a swappable model reference rather than a hardcoded one.</p>
+          <a class="project-link" href="https://github.com/haru-mishi/haru-chat-bot" target="_blank" rel="noopener">GitHub &rarr;</a>
+        </div>
+        <div class="project-card">
+          <button type="button" class="project-thumb has-image" data-count="3" data-images="images/projects/kfsuay-pos/1.png,images/projects/kfsuay-pos/2.png,images/projects/kfsuay-pos/3.png">
+            <img src="images/projects/kfsuay-pos/1.png" alt="KFSuay POS register screenshot">
+          </button>
+          <h3>KFSuay POS</h3>
+          <p>A FastAPI + Postgres backend slice proving concurrent orders can't oversell shared stock: a <code>SELECT ... FOR UPDATE</code> row lock serializes contention on the order endpoint, so 30 simultaneous requests against 10 units of stock resolve to exactly 10 accepted and 20 cleanly rejected — never negative, never double-sold. Wrapped in a small register-style demo UI (cart, QR receipt) with the stress test tucked behind a hidden control, since the lock is the point, not the ordering flow.</p>
+          <div class="project-links">
+            <a class="project-link" href="https://github.com/haru-mishi/kfsuay-pos/blob/main/DESIGN.md" target="_blank" rel="noopener">Design Doc &rarr;</a>
+            <a class="project-link" href="https://github.com/haru-mishi/kfsuay-pos" target="_blank" rel="noopener">GitHub &rarr;</a>
+          </div>
         </div>
       </div>
     </section>
@@ -147,7 +167,10 @@
   <dialog id="lightbox" class="lightbox">
     <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
     <button type="button" class="carousel-btn lightbox-btn" id="lightboxPrev" aria-label="Previous image">&larr;</button>
-    <div class="lightbox-image" id="lightboxImage"></div>
+    <div class="lightbox-main">
+      <div class="lightbox-image" id="lightboxImage"></div>
+      <div class="lightbox-thumbs" id="lightboxThumbs"></div>
+    </div>
     <button type="button" class="carousel-btn lightbox-btn" id="lightboxNext" aria-label="Next image">&rarr;</button>
   </dialog>
 
