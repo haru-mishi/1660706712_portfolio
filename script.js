@@ -7,6 +7,28 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 8);
 }, { passive: true });
 
+// in-page nav links: native anchor scrolling breaks once a target section is a
+// permanently-stuck `.cover-panel` (its rect.top/offsetTop track the current
+// scroll position, not its true document offset), so compute the real offset
+// by summing preceding top-level sections instead.
+const topSections = Array.from(document.querySelectorAll('body > header, body > section, body > footer'));
+function scrollToSection(target){
+  let top = 0;
+  for (const el of topSections) {
+    if (el === target) break;
+    top += el.offsetHeight;
+  }
+  window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+}
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  const target = document.getElementById(a.getAttribute('href').slice(1));
+  if (!target) return;
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollToSection(target);
+  });
+});
+
 // scroll progress bar
 const progress = document.getElementById('scroll-progress');
 function updateProgress(){
