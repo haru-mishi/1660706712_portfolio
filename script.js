@@ -1,80 +1,171 @@
-// Sidebar nav: smooth scroll + scrollspy
-(function () {
-  const links = document.querySelectorAll('#nav a');
-  const sections = document.querySelectorAll('main section');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  links.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-    });
-  });
+// nav background on scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
+// scroll progress bar
+const progress = document.getElementById('scroll-progress');
+function updateProgress(){
+  const h = document.documentElement;
+  const scrollable = h.scrollHeight - h.clientHeight;
+  const pct = scrollable > 0 ? (h.scrollTop / scrollable) * 100 : 0;
+  progress.style.width = pct + '%';
+}
+window.addEventListener('scroll', updateProgress, { passive: true });
+updateProgress();
+
+// scroll reveal
+const revealTargets = document.querySelectorAll('section, .card');
+if (!reduceMotion && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
-        links.forEach((l) => l.classList.remove('active'));
-        const match = document.querySelector('#nav a[href="#' + entry.target.id + '"]');
-        if (match) match.classList.add('active');
+        setTimeout(() => entry.target.classList.add('in-view'), (i % 6) * 70);
+        io.unobserve(entry.target);
       }
     });
-  }, { rootMargin: '-45% 0px -45% 0px' });
+  }, { threshold: 0.12 });
+  revealTargets.forEach(el => io.observe(el));
+} else {
+  revealTargets.forEach(el => el.classList.add('in-view'));
+}
 
-  sections.forEach((s) => observer.observe(s));
-})();
+// typewriter role rotator
+const roles = ['Backend Systems', 'Concurrency & Correctness', 'IoT Pipelines', 'Applied ML'];
+const roleEl = document.getElementById('role-text');
 
-// Home carousel (placeholder frames until real photos are added)
+if (reduceMotion) {
+  roleEl.textContent = roles[0];
+} else {
+  let roleIndex = 0, charIndex = 0, deleting = false;
+  const typeSpeed = 55, deleteSpeed = 30, holdTime = 1400;
+
+  function tick() {
+    const current = roles[roleIndex];
+    if (!deleting) {
+      charIndex++;
+      roleEl.textContent = current.slice(0, charIndex);
+      if (charIndex === current.length) {
+        deleting = true;
+        setTimeout(tick, holdTime);
+        return;
+      }
+      setTimeout(tick, typeSpeed);
+    } else {
+      charIndex--;
+      roleEl.textContent = current.slice(0, charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+      }
+      setTimeout(tick, deleteSpeed);
+    }
+  }
+  tick();
+}
+
+// ascii-art "video": braille-art portrait rendered as animated ASCII (decorative, home hero)
 (function () {
-  const prevBtn = document.getElementById('carouselPrev');
-  const nextBtn = document.getElementById('carouselNext');
-  if (!prevBtn || !nextBtn) return;
+  const el = document.getElementById('asciiArt');
+  if (!el) return;
 
-  const cardPrev = document.getElementById('cardPrev');
-  const cardActive = document.getElementById('cardActive');
-  const cardNext = document.getElementById('cardNext');
-  const COUNT = 5;
-  let index = 0;
+  const asciiGrid = [
+    "⣇⣿⠘⣿⣿⣿⡿⡿⣟⣟⢟⢟⢝⠵⡝⣿⡿⢂⣼⣿⣷⣌⠩⡫⡻⣝⠹⢿⣿⣷",
+    "⡆⣿⣆⠱⣝⡵⣝⢅⠙⣿⢕⢕⢕⢕⢝⣥⢒⠅⣿⣿⣿⡿⣳⣌⠪⡪⣡⢑⢝⣇",
+    "⡆⣿⣿⣦⠹⣳⣳⣕⢅⠈⢗⢕⢕⢕⢕⢕⢈⢆⠟⠋⠉⠁⠉⠉⠁⠈⠼⢐⢕⢽",
+    "⡗⢰⣶⣶⣦⣝⢝⢕⢕⠅⡆⢕⢕⢕⢕⢕⣴⠏⣠⡶⠛⡉⡉⡛⢶⣦⡀⠐⣕⢕",
+    "⡝⡄⢻⢟⣿⣿⣷⣕⣕⣅⣿⣔⣕⣵⣵⣿⣿⢠⣿⢠⣮⡈⣌⠨⠅⠹⣷⡀⢱⢕",
+    "⡝⡵⠟⠈⢀⣀⣀⡀⠉⢿⣿⣿⣿⣿⣿⣿⣿⣼⣿⢈⡋⠴⢿⡟⣡⡇⣿⡇⡀⢕",
+    "⡝⠁⣠⣾⠟⡉⡉⡉⠻⣦⣻⣿⣿⣿⣿⣿⣿⣿⣿⣧⠸⣿⣦⣥⣿⡇⡿⣰⢗⢄",
+    "⠁⢰⣿⡏⣴⣌⠈⣌⠡⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣬⣉⣉⣁⣄⢖⢕⢕⢕",
+    "⡀⢻⣿⡇⢙⠁⠴⢿⡟⣡⡆⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣵⣵⣿",
+    "⡻⣄⣻⣿⣌⠘⢿⣷⣥⣿⠇⣿⣿⣿⣿⣿⣿⠛⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+    "⣷⢄⠻⣿⣟⠿⠦⠍⠉⣡⣾⣿⣿⣿⣿⣿⣿⢸⣿⣦⠙⣿⣿⣿⣿⣿⣿⣿⣿⠟",
+    "⡕⡑⣑⣈⣻⢗⢟⢞⢝⣻⣿⣿⣿⣿⣿⣿⣿⠸⣿⠿⠃⣿⣿⣿⣿⣿⣿⡿⠁⣠",
+    "⡝⡵⡈⢟⢕⢕⢕⢕⣵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿⠿⠋⣀⣈⠙",
+    "⡝⡵⡕⡀⠑⠳⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⢉⡠⡲⡫⡪⡪⡣",
+  ];
+  const asciiSparkCoords = [[0, 2], [0, 17], [1, 0], [1, 3], [1, 7], [1, 8], [1, 16], [1, 17], [1, 24], [1, 27], [2, 0], [2, 8], [2, 16], [2, 17], [2, 22], [2, 24], [2, 27], [3, 1], [3, 9], [3, 10], [3, 21], [3, 27], [4, 1], [4, 17], [4, 19], [4, 21], [4, 24], [4, 27], [5, 4], [5, 5], [5, 8], [5, 21], [6, 2], [6, 6], [6, 7], [6, 29], [7, 0], [7, 1], [7, 25], [8, 10], [9, 10], [10, 6], [11, 3], [11, 17], [11, 28], [11, 29], [12, 2], [12, 26], [12, 27], [12, 29], [13, 3], [13, 4], [13, 24]];
+  const sparkSet = new Set(asciiSparkCoords.map(([y, x]) => y + ',' + x));
 
-  function render(direction) {
-    const prevIdx = (index - 1 + COUNT) % COUNT;
-    const nextIdx = (index + 1) % COUNT;
-    cardPrev.textContent = 'PIC ' + (prevIdx + 1);
-    cardActive.textContent = 'PIC ' + (index + 1);
-    cardNext.textContent = 'PIC ' + (nextIdx + 1);
+  const rows = asciiGrid.map((rowStr, y) => {
+    const rowEl = document.createElement('span');
+    rowEl.className = 'ascii-row';
+    let buf = '';
+    const flush = () => {
+      if (buf) { rowEl.appendChild(document.createTextNode(buf)); buf = ''; }
+    };
+    for (let x = 0; x < rowStr.length; x++) {
+      const ch = rowStr[x];
+      if (sparkSet.has(y + ',' + x)) {
+        flush();
+        const spark = document.createElement('span');
+        spark.className = 'spark';
+        spark.textContent = ch;
+        spark.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+        rowEl.appendChild(spark);
+      } else {
+        buf += ch;
+      }
+    }
+    flush();
+    return rowEl;
+  });
 
-    const enterClass = direction === 'left' ? 'enter-left' : 'enter-right';
-    [cardPrev, cardActive, cardNext].forEach((card) => {
-      card.classList.remove('enter-left', 'enter-right');
-      void card.offsetWidth;
-      card.classList.add(enterClass);
-    });
+  rows.forEach(rowEl => el.appendChild(rowEl));
+
+  if (reduceMotion) {
+    rows.forEach(r => r.classList.add('show'));
+    return;
   }
 
-  prevBtn.addEventListener('click', () => {
-    index = (index - 1 + COUNT) % COUNT;
-    render('left');
-  });
-  nextBtn.addEventListener('click', () => {
-    index = (index + 1) % COUNT;
-    render('right');
-  });
-
-  cardActive.addEventListener('click', () => {
-    if (window.openLightbox) window.openLightbox(COUNT, index, 'Photo');
-  });
-  cardActive.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      cardActive.click();
-    }
-  });
-
-  render();
+  rows.forEach((rowEl, i) => setTimeout(() => rowEl.classList.add('show'), 120 + i * 45));
 })();
 
-// Image lightbox (placeholder slots until real photos/screenshots are added).
-// Exposes window.openLightbox(count, startIndex, label) so the home carousel
-// can reuse the same dialog instead of duplicating it.
+// copy email on click
+const emailLink = document.getElementById('email-link');
+const copyNote = document.getElementById('copy-note');
+emailLink.addEventListener('click', (e) => {
+  if (navigator.clipboard) {
+    e.preventDefault();
+    navigator.clipboard.writeText('sahutsakorn.phir@bumail.net').then(() => {
+      copyNote.classList.add('show');
+      setTimeout(() => copyNote.classList.remove('show'), 1500);
+    }).catch(() => {
+      window.location.href = 'mailto:sahutsakorn.phir@bumail.net';
+    });
+  }
+});
+
+// card spotlight + tilt (desktop hover only)
+if (canHover && !reduceMotion) {
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+
+      if (!card.classList.contains('add-card')) {
+        const cx = x / rect.width - 0.5;
+        const cy = y / rect.height - 0.5;
+        card.style.transition = 'border-color .3s ease, background-color .3s ease';
+        card.style.transform = `perspective(700px) rotateX(${(-cy * 6).toFixed(2)}deg) rotateY(${(cx * 8).toFixed(2)}deg) translateY(-4px)`;
+      }
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform .5s var(--ease), border-color .3s ease, background-color .3s ease';
+      card.style.transform = '';
+    });
+  });
+}
+
+// image/video lightbox for project + certification thumbnails
 (function () {
   const dialog = document.getElementById('lightbox');
   if (!dialog) return;
@@ -88,7 +179,6 @@
 
   let count = 1;
   let index = 0;
-  let label = 'Screenshot';
   let images = null;
   let video = null;
 
@@ -98,7 +188,7 @@
       return;
     }
     thumbStripEl.innerHTML = images
-      .map((src, i) => '<button type="button" data-index="' + i + '"><img src="' + src + '" alt=""></button>')
+      .map((src, i) => '<button type="button" data-index="' + i + '" aria-label="Photo ' + (i + 1) + '"><img src="' + src + '" alt=""></button>')
       .join('');
   }
 
@@ -106,19 +196,16 @@
     if (video) {
       imageEl.innerHTML = '<video src="' + video + '" controls autoplay playsinline></video>';
     } else if (images) {
-      imageEl.innerHTML = '<img src="' + images[index] + '" alt="' + label + ' ' + (index + 1) + '">';
-    } else {
-      imageEl.textContent = label + ' ' + (index + 1) + ' / ' + count;
+      imageEl.innerHTML = '<img src="' + images[index] + '" alt="Screenshot ' + (index + 1) + '">';
     }
     thumbStripEl.querySelectorAll('button').forEach((btn, i) => {
       btn.classList.toggle('active', i === index);
     });
   }
 
-  function open(total, startIndex, itemLabel, itemImages, itemVideo) {
+  function open(total, startIndex, itemImages, itemVideo) {
     count = total;
     index = startIndex || 0;
-    label = itemLabel || 'Screenshot';
     images = itemImages || null;
     video = itemVideo || null;
     renderThumbStrip();
@@ -137,7 +224,7 @@
     thumb.addEventListener('click', () => {
       const imgs = thumb.dataset.images ? thumb.dataset.images.split(',') : null;
       const vid = thumb.dataset.video || null;
-      open(parseInt(thumb.dataset.count, 10) || 1, 0, 'Screenshot', imgs, vid);
+      open(parseInt(thumb.dataset.count, 10) || 1, 0, imgs, vid);
     });
   });
 
@@ -155,125 +242,105 @@
     render();
   });
   closeBtn.addEventListener('click', () => dialog.close());
-  window.openLightbox = open;
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();
   });
+  window.openLightbox = open;
 })();
 
-// Terminal splash
+// About page: real photos in the stacked-card carousel
 (function () {
-  const splash = document.getElementById('login-page');
-  const portfolio = document.getElementById('portfolio');
-  const termBody = document.getElementById('termBody');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prevBtn = document.getElementById('carouselPrev');
+  const nextBtn = document.getElementById('carouselNext');
+  if (!prevBtn || !nextBtn) return;
 
-  const script = [
-    { cmd: 'whoami' },
-    { out: 'Sahutsakorn Phiriyanichakorn' },
-    { cmd: 'cat about.md' },
-    { out: 'Information Technology and Innovation' },
-    { out: 'Major: Computer Science' },
-    { cmd: 'ls skills/' },
-    { out: 'C / C++, Python, Dart, SQL, Java, HTML' },
-  ];
+  const cardPrev = document.getElementById('cardPrev');
+  const cardActive = document.getElementById('cardActive');
+  const cardNext = document.getElementById('cardNext');
+  const photos = ['images/home/2.png', 'images/home/1.jpg', 'images/home/3.jpg'];
+  const COUNT = photos.length;
+  let index = 0;
 
-  function addLine(className, html) {
-    const el = document.createElement('div');
-    el.className = 'line ' + className;
-    el.innerHTML = html;
-    termBody.appendChild(el);
-    return el;
-  }
+  function render(direction) {
+    const prevIdx = (index - 1 + COUNT) % COUNT;
+    const nextIdx = (index + 1) % COUNT;
+    cardPrev.querySelector('img').src = photos[prevIdx];
+    cardActive.querySelector('img').src = photos[index];
+    cardNext.querySelector('img').src = photos[nextIdx];
 
-  function typeCmd(text, done) {
-    const el = addLine('cmd', '<span class="prompt">$</span><span></span>');
-    const span = el.querySelector('span:last-child');
-    if (reduced) { span.textContent = text; done(); return; }
-    let i = 0;
-    (function step() {
-      span.textContent = text.slice(0, i);
-      if (i < text.length) { i++; setTimeout(step, 26 + Math.random() * 30); }
-      else done();
-    })();
-  }
-
-  function showOut(text, done) {
-    addLine('out', '<span class="arrow">&rarr;</span> ' + text);
-    setTimeout(done, reduced ? 0 : 200);
-  }
-
-  function runScript(i) {
-    if (i >= script.length) { showPrompt(); return; }
-    const step = script[i];
-    if (step.cmd) {
-      typeCmd(step.cmd, () => setTimeout(() => runScript(i + 1), reduced ? 0 : 150));
-    } else {
-      showOut(step.out, () => runScript(i + 1));
+    if (direction) {
+      const enterClass = direction === 'left' ? 'enter-left' : 'enter-right';
+      [cardPrev, cardActive, cardNext].forEach((card) => {
+        card.classList.remove('enter-left', 'enter-right');
+        void card.offsetWidth;
+        card.classList.add(enterClass);
+      });
     }
   }
 
-  function showPrompt() {
-    const row = document.createElement('form');
-    row.className = 'prompt-row';
-    row.autocomplete = 'off';
-    row.innerHTML =
-      '<span class="prompt">$</span>' +
-      '<input type="text" id="startInput" autocomplete="off" spellcheck="false" placeholder="/start" aria-label="terminal command">' +
-      '<button type="submit" class="send-btn" aria-label="Launch">&#8629;</button>';
-    termBody.appendChild(row);
+  prevBtn.addEventListener('click', () => {
+    index = (index - 1 + COUNT) % COUNT;
+    render('left');
+  });
+  nextBtn.addEventListener('click', () => {
+    index = (index + 1) % COUNT;
+    render('right');
+  });
 
-    const input = row.querySelector('#startInput');
-    input.focus();
-
-    row.addEventListener('submit', (e) => {
+  cardActive.addEventListener('click', () => {
+    if (window.openLightbox) window.openLightbox(COUNT, index, photos);
+  });
+  cardActive.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      if (input.value.trim().toLowerCase() === '/start') {
-        launch();
-      } else {
-        input.classList.add('invalid');
-        setTimeout(() => input.classList.remove('invalid'), 220);
-      }
-    });
-  }
-
-  function launch() {
-    addLine('out', '<span class="arrow">&rarr;</span> launching portfolio<span class="accent">...</span>');
-    setTimeout(runWipe, reduced ? 0 : 500);
-  }
-
-  runScript(0);
-
-  function runWipe() {
-    const tint = document.getElementById('wipeTint');
-    const solid = document.getElementById('wipeSolid');
-    if (reduced) {
-      enterPortfolio();
-      tint.remove();
-      solid.remove();
-      return;
+      cardActive.click();
     }
+  });
+})();
 
-    const STAGGER = 380;
-    const DURATION = 460;
-    const HOLD = 400;
+// Projects: scroll-synced feature list (title picker <-> stacked image cards)
+(function () {
+  const list = document.querySelector('.feature-list');
+  const wrap = document.querySelector('.feature-list-wrap');
+  const detail = document.querySelector('.feature-detail');
+  const items = document.querySelectorAll('.feature-item');
+  const cards = document.querySelectorAll('.feature-image-card');
+  if (!list || !wrap || !detail || !items.length || !cards.length) return;
 
-    tint.classList.add('cover');
-    setTimeout(() => solid.classList.add('cover'), STAGGER);
+  function setActive(index) {
+    items.forEach((el, i) => el.classList.toggle('active', i === index));
+    cards.forEach((el, i) => el.classList.toggle('active', i === index));
 
-    setTimeout(() => {
-      enterPortfolio();
-      tint.classList.replace('cover', 'reveal');
-      setTimeout(() => solid.classList.replace('cover', 'reveal'), STAGGER);
-      setTimeout(() => {
-        tint.remove();
-        solid.remove();
-      }, STAGGER + DURATION);
-    }, STAGGER + DURATION + HOLD);
+    const source = cards[index].querySelector('.feature-detail-source');
+    if (source) detail.innerHTML = source.innerHTML;
+
+    const item = items[index];
+    const targetTop = item.offsetTop - (wrap.clientHeight - item.offsetHeight) / 2;
+    list.style.transform = 'translateY(' + -targetTop + 'px)';
   }
 
-  function enterPortfolio() {
-    splash.remove();
-    portfolio.classList.remove('hidden');
+  setActive(0);
+
+  items.forEach((el, i) => {
+    el.addEventListener('click', () => {
+      cards[i].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const idx = Array.from(cards).indexOf(entry.target);
+          if (idx !== -1) setActive(idx);
+        }
+      });
+    }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+    cards.forEach((card) => io.observe(card));
   }
+
+  window.addEventListener('resize', () => {
+    const activeIndex = Array.from(items).findIndex((el) => el.classList.contains('active'));
+    setActive(activeIndex === -1 ? 0 : activeIndex);
+  });
 })();

@@ -1,179 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sahutsakorn Phiriyanichakorn — Portfolio</title>
+<meta name="description" content="Backend & systems engineering portfolio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="login-page">
-    <div class="terminal">
-      <div class="titlebar">
-        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
-        <div class="session-name">sahutsakorn@portfolio: ~</div>
-        <div class="live">Live</div>
-      </div>
-      <div class="terminal-body" id="termBody"></div>
+
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="noise-overlay" aria-hidden="true"></div>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <div class="nav-links">
+      <a href="#home" class="brand">Home</a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#contact">Contact</a>
     </div>
-    <p class="splash-hint">Type <code>/start</code> and press Enter to continue.</p>
+    <div class="status-pill">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>Open to internships</span>
+    </div>
   </div>
+</nav>
 
-  <div id="portfolio" class="hidden">
-  <nav class="sidenav" id="nav">
-    <a href="#home-page" class="active">Home</a>
-    <a href="#about-page">About</a>
-    <a href="#projects-page">Projects</a>
-    <a href="#certifications-page">Certifications</a>
-    <a href="#contact-page">Contact</a>
-  </nav>
+<header class="hero cover-panel" id="home">
+  <div class="aurora-field" aria-hidden="true">
+    <span class="aurora aurora-a"></span>
+    <span class="aurora aurora-b"></span>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <p class="hero-eyebrow mono">PORTFOLIO — BACKEND &amp; SYSTEMS</p>
+      <h1>Sahutsakorn Phiriyanichakorn</h1>
+      <p class="hero-role mono"><span id="role-text"></span><span class="cursor">_</span></p>
+      <p class="hero-bio">
+        Final-year Information Technology and Innovation student (Computer Science) at Bangkok
+        University. I like backend and systems problems — <span class="proof">the kind you prove
+        with a stress test, not just a demo</span>.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">View projects</a>
+        <a href="#contact" class="btn-ghost">Get in touch</a>
+      </div>
+      <p class="hero-meta mono">nickname ping · age 23 · bangkok university</p>
+    </div>
+    <div class="hero-photo">
+      <div class="terminal">
+        <div class="titlebar">
+          <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+          <div class="session-name">(˶>⩊<˶)</div>
+          <div class="live">Live</div>
+        </div>
+        <div class="terminal-body ascii-body">
+          <pre class="ascii-art" id="asciiArt" aria-label="ASCII rendering of a whale swimming above a sleeping figure"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
 
-  <main>
-    <section id="home-page">
-      <div class="home-grid">
-        <div class="home-text">
-          <div class="eyebrow">Backend &amp; Systems Engineering</div>
-          <h1>Sahutsakorn Phiriyanichakorn</h1>
-          <p>Information Technology and Innovation</p>
-          <p>Major: Computer Science</p>
-
-          <div class="home-facts mono">
-            <div><span>nickname</span>ping</div>
-            <div><span>age</span>23</div>
-            <div><span>birthday</span>31 jan 2002</div>
+<section id="about" class="cover-panel">
+  <div class="section-inner">
+    <div class="section-head">
+      <h2>About</h2>
+      <p class="section-sub">A little more context than the resume gives.</p>
+    </div>
+    <div class="about-columns">
+      <div class="about-main">
+        <div class="about-body">
+          <p>I've been into computers since I was a kid, always at the top of my coding classes. That took me to Bangkok University, where I'm finishing my degree in Information Technology and Innovation / Computer Science.</p>
+          <p>Games are actually where that mindset came from. I never just played them — I wanted to know why a strategy worked, what was happening under a build or a matchup that made one choice beat another. That habit of pulling something apart to see how it actually holds together is the same one I use on code now: I don't trust that something works until I've tested it, not just assumed it.</p>
+        </div>
+        <div class="about-stack">
+          <p class="section-label mono">// stack</p>
+          <div class="stack-group">
+            <h3>Backend &amp; Data</h3>
+            <div class="chip-row">
+              <span class="chip">Python</span>
+              <span class="chip">FastAPI</span>
+              <span class="chip">Flask</span>
+              <span class="chip">PostgreSQL</span>
+              <span class="chip">SQL</span>
+            </div>
+          </div>
+          <div class="stack-group">
+            <h3>Systems &amp; IoT</h3>
+            <div class="chip-row">
+              <span class="chip">C/C++</span>
+              <span class="chip">ESP32</span>
+              <span class="chip">MQTT</span>
+              <span class="chip">Node-RED</span>
+            </div>
+          </div>
+          <div class="stack-group">
+            <h3>Web &amp; AI</h3>
+            <div class="chip-row">
+              <span class="chip">JavaScript</span>
+              <span class="chip">Next.js / React</span>
+              <span class="chip">TensorFlow</span>
+              <span class="chip">Java</span>
+              <span class="chip">Dart</span>
+            </div>
           </div>
         </div>
-
+      </div>
+      <div class="about-photo">
         <div class="carousel">
           <button class="carousel-btn" id="carouselPrev" aria-label="Previous photo">&larr;</button>
           <div class="carousel-stack">
-            <div class="carousel-card side" id="cardPrev"></div>
-            <div class="carousel-card active" id="cardActive" role="button" tabindex="0" aria-label="Open photo">PIC</div>
-            <div class="carousel-card side" id="cardNext"></div>
+            <div class="carousel-card side" id="cardPrev"><img src="images/home/1.jpg" alt=""></div>
+            <div class="carousel-card active" id="cardActive" role="button" tabindex="0" aria-label="Open photo"><img src="images/home/2.png" alt="Photo 1"></div>
+            <div class="carousel-card side" id="cardNext"><img src="images/home/3.jpg" alt=""></div>
           </div>
           <button class="carousel-btn" id="carouselNext" aria-label="Next photo">&rarr;</button>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <div class="divider"></div>
+<section id="projects">
+  <div class="section-inner">
 
-    <section id="about-page">
-      <h2>About Me</h2>
-      <p>I've been into computers since I was a kid, always at the top of my coding classes. That took me to Bangkok University, where I'm finishing my degree in Information Technology and Innovation / Computer Science.</p>
-      <p>I reached top 4 at Intel Gamer Days (Road to TGS2022) in League of Legends &mdash; real pressure, not a classroom kind. I've been through genuinely hard periods, and it left me stubborn in a useful way &mdash; I don't walk away from a problem just because it's hard, whether that's personal or a bug I can't reproduce, and I pick things up fast once I do.</p>
-    </section>
+  <div class="feature-grid">
 
-    <div class="divider"></div>
+    <div class="feature-col">
+      <div class="section-head">
+        <h2>Projects</h2>
+        <p class="section-sub">What's actually shipped, with the backend decisions behind each one.</p>
+      </div>
+      <div class="feature-list-wrap">
+        <div class="feature-list">
+          <button type="button" class="feature-item" data-index="0"><span class="feature-index mono">01</span>Smart Room Monitoring System</button>
+          <button type="button" class="feature-item" data-index="1"><span class="feature-index mono">02</span>Thai Digit Recognition</button>
+          <button type="button" class="feature-item" data-index="2"><span class="feature-index mono">03</span>Echoes in the Dark</button>
+          <button type="button" class="feature-item" data-index="3"><span class="feature-index mono">04</span>Haru AI Hub</button>
+          <button type="button" class="feature-item" data-index="4"><span class="feature-index mono">05</span>KFSuay POS</button>
+        </div>
+      </div>
+      <div class="feature-detail"></div>
+    </div>
 
-    <section id="projects-page">
-      <h2>Projects</h2>
-      <div class="project-grid">
-        <div class="project-card">
-          <button type="button" class="project-thumb has-video" data-video="videos/projects/smart-room/demo.mp4">
-            <video src="videos/projects/smart-room/demo.mp4" muted preload="metadata"></video>
-          </button>
-          <h3>Smart Room Monitoring System</h3>
+    <div class="feature-images">
+
+      <div class="feature-image-card">
+        <button type="button" class="feature-thumb project-thumb has-video" data-video="videos/projects/smart-room/demo.mp4">
+          <video src="videos/projects/smart-room/demo.mp4" muted preload="metadata"></video>
+        </button>
+        <div class="feature-detail-source" hidden>
+          <div class="card-top">
+            <span class="card-id mono">PRJ-01</span>
+            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
+          </div>
           <p>ESP32 sensor node publishing occupancy, temperature, and humidity over MQTT to a Node-RED dashboard. Presence detection runs a small state machine (entry timestamp, dwell threshold, cooldown) to turn raw ultrasonic readings into a reliable people count.</p>
-          <a class="project-link" href="https://github.com/haru-mishi/IOT_ultra_sonic_sensor_density" target="_blank" rel="noopener">GitHub &rarr;</a>
+          <span class="card-domain mono">IOT / BACKEND</span>
+          <div class="card-tags">
+            <span class="tag">ESP32</span>
+            <span class="tag">MQTT</span>
+            <span class="tag">Node-RED</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/haru-mishi/IOT_ultra_sonic_sensor_density" target="_blank" rel="noopener">GitHub &rarr;</a>
+          </div>
         </div>
-        <div class="project-card">
-          <button type="button" class="project-thumb has-image" data-count="3" data-images="images/projects/thai-digits/1.png,images/projects/thai-digits/2.png,images/projects/thai-digits/3.png">
-            <img src="images/projects/thai-digits/1.png" alt="Thai Digit Recognition screenshot">
-          </button>
-          <h3>Thai Digit Recognition</h3>
+      </div>
+
+      <div class="feature-image-card">
+        <button type="button" class="feature-thumb project-thumb has-image" data-count="3" data-images="images/projects/thai-digits/1.png,images/projects/thai-digits/2.png,images/projects/thai-digits/3.png">
+          <img src="images/projects/thai-digits/1.png" alt="Thai Digit Recognition screenshot">
+        </button>
+        <div class="feature-detail-source" hidden>
+          <div class="card-top">
+            <span class="card-id mono">PRJ-02</span>
+            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
+          </div>
           <p>Solo rebuild of a 10-class digit CNN (~92% accuracy) served through a Flask API. Freehand strokes are segmented and composed into multi-digit numbers of any length; an explicit stroke-boundary signal resolves touching digits that proximity-based heuristics can't disambiguate.</p>
-          <div class="project-links">
-            <a class="project-link" href="https://thai-digits-predict.onrender.com" target="_blank" rel="noopener">Live Demo &rarr;</a>
-            <a class="project-link" href="https://github.com/haru-mishi/thai_digits_predict" target="_blank" rel="noopener">GitHub &rarr;</a>
+          <span class="card-domain mono">AI / WEB</span>
+          <div class="card-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Flask</span>
+            <span class="tag">TensorFlow</span>
           </div>
-          <p class="project-note">Free-tier server sleeps when idle — first load after a while can take ~30-60s to wake up.</p>
+          <p class="card-note">Free-tier server sleeps when idle — first load after a while can take ~30-60s to wake up.</p>
+          <div class="card-links">
+            <a href="https://thai-digits-predict.onrender.com" target="_blank" rel="noopener">Live Demo &rarr;</a>
+            <a href="https://github.com/haru-mishi/thai_digits_predict" target="_blank" rel="noopener">GitHub &rarr;</a>
+          </div>
         </div>
-        <div class="project-card">
-          <button type="button" class="project-thumb has-video" data-video="videos/projects/echoes-in-the-dark/demo.mp4">
-            <video src="videos/projects/echoes-in-the-dark/demo.mp4" muted preload="metadata"></video>
-          </button>
-          <h3>Echoes in the Dark</h3>
+      </div>
+
+      <div class="feature-image-card">
+        <button type="button" class="feature-thumb project-thumb has-video" data-video="videos/projects/echoes-in-the-dark/demo.mp4">
+          <video src="videos/projects/echoes-in-the-dark/demo.mp4" muted preload="metadata"></video>
+        </button>
+        <div class="feature-detail-source" hidden>
+          <div class="card-top">
+            <span class="card-id mono">PRJ-03</span>
+            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
+          </div>
           <p>A short horror-themed exploration game built in GameMaker Studio, made as an object-oriented programming exercise — the player, enemies, and each interactable (locked doors, readable objects) are modeled as separate objects with their own behavior and state.</p>
-          <a class="project-link" href="https://github.com/haru-mishi/Echoes-in-the-dark" target="_blank" rel="noopener">GitHub &rarr;</a>
-        </div>
-        <div class="project-card">
-          <button type="button" class="project-thumb has-image" data-count="7" data-images="images/projects/haru-ai-hub/2.png,images/projects/haru-ai-hub/1.png,images/projects/haru-ai-hub/3.png,images/projects/haru-ai-hub/4.png,images/projects/haru-ai-hub/5.png,images/projects/haru-ai-hub/6.png,images/projects/haru-ai-hub/7.png">
-            <img src="images/projects/haru-ai-hub/2.png" alt="Haru AI Hub screenshot">
-          </button>
-          <h3>Haru AI Hub</h3>
-          <p>Self-hosted admin console for local LLMs, with role-scoped multi-user access: users manage only their own API keys and usage, while admins get full oversight across users, models, and token consumption. Each API key is restricted to an allow-list of models, and chat talks to a local Ollama instance through a swappable model reference rather than a hardcoded one.</p>
-          <a class="project-link" href="https://github.com/haru-mishi/haru-chat-bot" target="_blank" rel="noopener">GitHub &rarr;</a>
-        </div>
-        <div class="project-card">
-          <button type="button" class="project-thumb has-image" data-count="3" data-images="images/projects/kfsuay-pos/1.png,images/projects/kfsuay-pos/2.png,images/projects/kfsuay-pos/3.png">
-            <img src="images/projects/kfsuay-pos/1.png" alt="KFSuay POS register screenshot">
-          </button>
-          <h3>KFSuay POS</h3>
-          <p>A FastAPI + Postgres backend slice proving concurrent orders can't oversell shared stock: a <code>SELECT ... FOR UPDATE</code> row lock serializes contention on the order endpoint, so 30 simultaneous requests against 10 units of stock resolve to exactly 10 accepted and 20 cleanly rejected — never negative, never double-sold. Wrapped in a small register-style demo UI (cart, QR receipt) with the stress test tucked behind a hidden control, since the lock is the point, not the ordering flow.</p>
-          <div class="project-links">
-            <a class="project-link" href="https://github.com/haru-mishi/kfsuay-pos/blob/main/DESIGN.md" target="_blank" rel="noopener">Design Doc &rarr;</a>
-            <a class="project-link" href="https://github.com/haru-mishi/kfsuay-pos" target="_blank" rel="noopener">GitHub &rarr;</a>
+          <span class="card-domain mono">GAME / OOP</span>
+          <div class="card-tags">
+            <span class="tag">GameMaker</span>
+            <span class="tag">OOP</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/haru-mishi/Echoes-in-the-dark" target="_blank" rel="noopener">GitHub &rarr;</a>
           </div>
         </div>
       </div>
-    </section>
 
-    <div class="divider"></div>
-
-    <section id="certifications-page">
-      <h2>Certifications</h2>
-      <div class="cert-list">
-        <div class="row"><span class="name">Certification One</span><span class="when mono">2026</span></div>
-        <div class="row"><span class="name">Certification Two</span><span class="when mono">2026</span></div>
+      <div class="feature-image-card">
+        <button type="button" class="feature-thumb project-thumb has-image" data-count="7" data-images="images/projects/haru-ai-hub/2.png,images/projects/haru-ai-hub/1.png,images/projects/haru-ai-hub/3.png,images/projects/haru-ai-hub/4.png,images/projects/haru-ai-hub/5.png,images/projects/haru-ai-hub/6.png,images/projects/haru-ai-hub/7.png">
+          <img src="images/projects/haru-ai-hub/2.png" alt="Haru AI Hub screenshot">
+        </button>
+        <div class="feature-detail-source" hidden>
+          <div class="card-top">
+            <span class="card-id mono">PRJ-04</span>
+            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
+          </div>
+          <p>Self-hosted admin console for local LLMs, with role-scoped multi-user access: users manage only their own API keys and usage, while admins get full oversight across users, models, and token consumption. Each API key is restricted to an allow-list of models, and chat talks to a local Ollama instance through a swappable model reference rather than a hardcoded one.</p>
+          <span class="card-domain mono">AI / WEB</span>
+          <div class="card-tags">
+            <span class="tag">Next.js</span>
+            <span class="tag">React</span>
+            <span class="tag">Ollama</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/haru-mishi/haru-chat-bot" target="_blank" rel="noopener">GitHub &rarr;</a>
+          </div>
+        </div>
       </div>
-    </section>
 
-    <div class="divider"></div>
+      <div class="feature-image-card">
+        <button type="button" class="feature-thumb project-thumb has-image" data-count="3" data-images="images/projects/kfsuay-pos/1.png,images/projects/kfsuay-pos/2.png,images/projects/kfsuay-pos/3.png">
+          <img src="images/projects/kfsuay-pos/1.png" alt="KFSuay POS register screenshot">
+        </button>
+        <div class="feature-detail-source" hidden>
+          <div class="card-top">
+            <span class="card-id mono">PRJ-05</span>
+            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
+          </div>
+          <p>A FastAPI + Postgres backend slice proving concurrent orders can't oversell shared stock: a <code>SELECT ... FOR UPDATE</code> row lock serializes contention on the order endpoint, so 30 simultaneous requests against 10 units of stock resolve to <span class="proof">exactly 10 accepted and 20 cleanly rejected — never negative, never double-sold</span>. Wrapped in a small register-style demo UI, with the stress test tucked behind a hidden control since the lock is the point, not the ordering flow.</p>
+          <span class="card-domain mono">BACKEND</span>
+          <div class="card-tags">
+            <span class="tag">FastAPI</span>
+            <span class="tag">Postgres</span>
+            <span class="tag">psycopg</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/haru-mishi/kfsuay-pos/blob/main/DESIGN.md" target="_blank" rel="noopener">Design Doc &rarr;</a>
+            <a href="https://github.com/haru-mishi/kfsuay-pos" target="_blank" rel="noopener">GitHub &rarr;</a>
+          </div>
+        </div>
+      </div>
 
-    <section id="contact-page">
-      <h2>Contact</h2>
-      <div class="eyebrow">Bangkok University</div>
-      <div class="contact-text mono">
-        <div><span>email</span><a href="mailto:sahutsakorn.phir@bumail.net">sahutsakorn.phir@bumail.net</a></div>
-        <div><span>phone</span><a href="tel:+66992941952">099-294-1952</a></div>
-      </div>
-      <div class="social-icons">
-        <a class="icon-btn github" href="https://github.com/haru-mishi" target="_blank" rel="noopener" aria-label="GitHub">
-          <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        </a>
-        <a class="icon-btn instagram" href="https://www.instagram.com/ping_edition/" target="_blank" rel="noopener" aria-label="Instagram">
-          <svg viewBox="0 0 24 24">
-            <defs>
-              <linearGradient id="ig-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#f09433"/>
-                <stop offset="25%" stop-color="#e6683c"/>
-                <stop offset="50%" stop-color="#dc2743"/>
-                <stop offset="75%" stop-color="#cc2366"/>
-                <stop offset="100%" stop-color="#bc1888"/>
-              </linearGradient>
-            </defs>
-            <path fill="url(#ig-gradient)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.012-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-          </svg>
-        </a>
-      </div>
-    </section>
-  </main>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section id="certifications" class="cover-panel">
+  <div class="section-inner">
+  <div class="section-head">
+    <h2>Certifications</h2>
+    <p class="section-sub">Courses completed outside of coursework.</p>
   </div>
 
-  <div id="wipeTint" class="wipe wipe-tint"></div>
-  <div id="wipeSolid" class="wipe wipe-solid"></div>
+  <div class="project-grid">
 
-  <dialog id="lightbox" class="lightbox">
-    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
-    <button type="button" class="carousel-btn lightbox-btn" id="lightboxPrev" aria-label="Previous image">&larr;</button>
-    <div class="lightbox-main">
-      <div class="lightbox-image" id="lightboxImage"></div>
-      <div class="lightbox-thumbs" id="lightboxThumbs"></div>
-    </div>
-    <button type="button" class="carousel-btn lightbox-btn" id="lightboxNext" aria-label="Next image">&rarr;</button>
-  </dialog>
+    <article class="card">
+      <button type="button" class="card-thumb has-image project-thumb" data-count="1" data-images="images/certifications/coding-interview.jpg">
+        <img src="images/certifications/coding-interview.jpg" alt="Master the Coding Interview: Data Structures + Algorithms certificate">
+      </button>
+      <div class="card-top">
+        <span class="card-id mono">Jul 2026</span>
+        <span class="badge shipped"><span class="badge-dot"></span>issued</span>
+      </div>
+      <h3>Master the Coding Interview: Data Structures + Algorithms</h3>
+      <p>20-hour Udemy course on data structures and algorithms for coding interviews, taught by Andrei Neagoie.</p>
+      <span class="card-domain mono">UDEMY</span>
+      <div class="card-links">
+        <a href="https://ude.my/UC-ee92adb3-e28e-4787-a1b9-c3b20921d601" target="_blank" rel="noopener">Verify &rarr;</a>
+      </div>
+    </article>
 
-  <script src="script.js"></script>
+  </div>
+  </div>
+</section>
+
+<footer id="contact" class="cover-panel">
+  <div class="footer-inner">
+  <p class="section-label mono">// contact</p>
+  <a href="mailto:sahutsakorn.phir@bumail.net" class="contact-email" id="email-link">
+    sahutsakorn.phir@bumail.net
+    <span class="copy-note mono" id="copy-note">copied</span>
+  </a>
+  <p class="contact-phone mono"><a href="tel:+66992941952">099-294-1952</a></p>
+  <div class="social-row">
+    <a href="https://github.com/haru-mishi" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.13 8.94 7.48 10.39.55.1.75-.24.75-.53 0-.26-.01-1.13-.02-2.04-3.04.66-3.68-1.3-3.68-1.3-.5-1.26-1.22-1.6-1.22-1.6-.99-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.91.1-.71.38-1.2.7-1.47-2.43-.28-4.98-1.21-4.98-5.4 0-1.19.42-2.17 1.12-2.93-.11-.28-.49-1.4.11-2.91 0 0 .92-.29 3.01 1.12A10.5 10.5 0 0 1 12 6.1c.93 0 1.87.13 2.75.37 2.09-1.41 3.01-1.12 3.01-1.12.6 1.51.22 2.63.11 2.91.7.76 1.12 1.74 1.12 2.93 0 4.2-2.56 5.12-5 5.39.39.34.74 1.01.74 2.04 0 1.47-.01 2.66-.01 3.02 0 .29.2.64.76.53 4.35-1.45 7.48-5.55 7.48-10.39C23.02 5.24 18.27.5 12 .5Z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/ping_edition/" target="_blank" rel="noopener" class="icon-btn" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <defs>
+          <linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#FEE411"/>
+            <stop offset="15%" stop-color="#FEDA77"/>
+            <stop offset="35%" stop-color="#F58529"/>
+            <stop offset="55%" stop-color="#DD2A7B"/>
+            <stop offset="75%" stop-color="#8134AF"/>
+            <stop offset="100%" stop-color="#515BD4"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#igGrad)" d="M12 2c2.71 0 3.05.01 4.12.06 1.07.05 1.79.22 2.43.46.66.26 1.21.6 1.76 1.15.5.5.9 1.1 1.15 1.76.24.64.41 1.36.46 2.43.05 1.07.06 1.41.06 4.12s-.01 3.05-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.9 4.9 0 0 1-1.15 1.76 4.9 4.9 0 0 1-1.76 1.15c-.64.24-1.36.41-2.43.46-1.07.05-1.41.06-4.12.06s-3.05-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.9 4.9 0 0 1-1.76-1.15 4.9 4.9 0 0 1-1.15-1.76c-.24-.64-.41-1.36-.46-2.43C2.01 15.05 2 14.71 2 12s.01-3.05.06-4.12c.05-1.07.22-1.79.46-2.43.26-.66.6-1.21 1.15-1.76a4.9 4.9 0 0 1 1.76-1.15c.64-.24 1.36-.41 2.43-.46C8.95 2.01 9.29 2 12 2Zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.3-.42.16-.72.36-1.03.67-.31.31-.51.61-.67 1.03-.12.32-.26.79-.3 1.66-.05 1.05-.06 1.37-.06 4.04s.01 2.99.06 4.04c.04.87.18 1.34.3 1.66.16.42.36.72.67 1.03.31.31.61.51 1.03.67.32.12.79.26 1.66.3 1.05.05 1.37.06 4.04.06s2.99-.01 4.04-.06c.87-.04 1.34-.18 1.66-.3.42-.16.72-.36 1.03-.67.31-.31.51-.61.67-1.03.12-.32.26-.79.3-1.66.05-1.05.06-1.37.06-4.04s-.01-2.99-.06-4.04c-.04-.87-.18-1.34-.3-1.66a2.7 2.7 0 0 0-.67-1.03 2.7 2.7 0 0 0-1.03-.67c-.32-.12-.79-.26-1.66-.3C14.99 3.81 14.67 3.8 12 3.8Zm0 3.2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4Zm5.2-2.05a1.17 1.17 0 1 1-2.34 0 1.17 1.17 0 0 1 2.34 0Z"/>
+      </svg>
+    </a>
+  </div>
+  <p class="foot-note">Bangkok University · last updated · 2026</p>
+  </div>
+</footer>
+
+<a href="#home" class="back-to-top-fab" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+</a>
+
+<dialog id="lightbox" class="lightbox">
+  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <button type="button" class="carousel-btn lightbox-btn" id="lightboxPrev" aria-label="Previous image">&larr;</button>
+  <div class="lightbox-main">
+    <div class="lightbox-image" id="lightboxImage"></div>
+    <div class="lightbox-thumbs" id="lightboxThumbs"></div>
+  </div>
+  <button type="button" class="carousel-btn lightbox-btn" id="lightboxNext" aria-label="Next image">&rarr;</button>
+</dialog>
+
+<script src="script.js"></script>
 </body>
 </html>
