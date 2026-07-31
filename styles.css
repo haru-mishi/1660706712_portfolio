@@ -5,8 +5,8 @@
   --border:#3A4557;
   --border-strong:#56647B;
   --text:#ECEFF4;
-  --text-muted:#8992A3;
-  --text-dim:#545E6E;
+  --text-muted:#A5AEBF;
+  --text-dim:#758296;
   --amber:#FFB84D;
   --teal:#4DD8C0;
   --green:#3FB950;
@@ -134,7 +134,7 @@ nav{
 }
 .nav-links a{
   position:relative;
-  font-size:14px;
+  font-size:16px;
   color:var(--text-muted);
   padding:9px 16px;
   border-radius:99px;
@@ -219,6 +219,9 @@ nav{
 
 .hero-content{position:relative; z-index:1; flex:1; min-width:0;}
 .hero-photo{position:relative; z-index:1; width:clamp(320px, 38vw, 680px); max-width:100%; flex-shrink:1;}
+/* nudged right of the hero's own 28px gutter; skipped below the stacked breakpoint
+   where the same offset would push it past the viewport */
+@media (min-width:861px){ .hero-photo{transform:translateX(20px);} }
 .hero-eyebrow{
   font-size:13px;
   letter-spacing:0.12em;
@@ -324,6 +327,19 @@ nav{
   pointer-events:none;
 }
 @keyframes beam-rotate{ to{--beam-angle:360deg;} }
+.about-meta svg{
+  width:1.1em; height:1.1em; vertical-align:-0.2em; margin-right:5px;
+  color:var(--amber);
+  fill:none; stroke:currentColor;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+.about-meta{
+  margin-top:24px;
+  font-size:16px;
+  font-weight:700;
+  color:#fff;
+  letter-spacing:0.02em;
+}
 .hero-meta{
   margin-top:44px;
   font-size:13px;
@@ -389,6 +405,11 @@ nav{
   container-type:inline-size;
   display:flex;
   justify-content:center;
+  /* fixed box: the arts differ in both column and row count, so each one is
+     scaled to fit this height rather than the box growing to fit the art */
+  --ascii-h:min(300px, 60vw);
+  align-items:center;
+  height:var(--ascii-h);
 }
 .ascii-body::after{
   content:'';
@@ -403,25 +424,27 @@ nav{
 .ascii-art{
   margin:0;
   font-family:'JetBrains Mono',monospace;
-  font-size:clamp(10px, 3.3cqw, 26px);
+  /* whichever fits first: 99cqw across the art's columns, or the box height
+     (minus .ascii-body's 20px×2 padding) across its rows at line-height 1.15 */
+  font-size:max(6px, min(
+    calc(99cqw / var(--ascii-cols, 30)),
+    calc((var(--ascii-h) - 40px) / var(--ascii-rows, 14) / 1.15),
+    26px));
   line-height:1.15;
   letter-spacing:0;
-  color:var(--text-dim);
+  color:var(--text);
   white-space:pre;
 }
 .ascii-row{display:block; opacity:0; transition:opacity var(--t-slow) var(--ease);}
 .ascii-row.show{opacity:1;}
-.spark{color:#F2D14E; opacity:.3; animation:twinkle 2.6s ease-in-out infinite;}
-/* colorised portrait: one hue per traced facial region (see script.js regions) */
-.f-skin{color:#EFC3A0;}
-.f-hair{color:#F0A3B4;}
-.f-iris{color:#3E9E6E;}
-.f-star{color:#F5D65C;}
-.f-sclera{color:#F4F7FB;}
-.f-mouth{color:#C4796A;}
-.f-chin{color:#D9A184;}
+.ascii-timer{
+  position:absolute;
+  right:12px; bottom:10px;
+  font-size:11px;
+  color:var(--text-dim);
+  letter-spacing:0.04em;
+}
 @keyframes asciiScan{from{top:-40%;} to{top:100%;}}
-@keyframes twinkle{0%,100%{opacity:.25;} 50%{opacity:1;}}
 .term-result.show{animation:signFlash .7s ease-out .4s;}
 @keyframes signFlash{0%{text-shadow:0 0 0 rgba(77,216,192,0);} 35%{text-shadow:0 0 14px rgba(77,216,192,0.85);} 100%{text-shadow:0 0 0 rgba(77,216,192,0);}}
 
@@ -440,6 +463,22 @@ nav{
   border:1px solid var(--border);
 }
 .carousel-card img{width:100%; height:100%; object-fit:cover; display:block;}
+/* border beam: same masked conic ring as .btn-ghost — inset:0, never negative,
+   or the card's own overflow:hidden clips the whole band away */
+.carousel-card.active::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:2px;
+  background:conic-gradient(from var(--beam-angle), transparent 0 70%, var(--teal), var(--amber), transparent 92%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  animation:beam-rotate 5s linear infinite;
+  pointer-events:none;
+  z-index:1;
+}
 /* transforms are driven by the spring solver in script.js, not by keyframes */
 .carousel-card.active{box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); cursor:pointer; z-index:2;}
 .carousel-card.side{width:280px; height:375px; top:27px; opacity:.45; z-index:1;}
@@ -623,6 +662,15 @@ section,
   background-clip:text;
   -webkit-text-fill-color:transparent;
   color:transparent;
+}
+#about .section-head h2{
+  background:linear-gradient(100deg, var(--text) 30%, var(--teal) 50%, var(--text) 70%);
+  background-size:200% 100%;
+  /* the shorthand above resets background-clip to border-box, so re-declare it
+     here or the gradient paints the whole box behind transparent text */
+  -webkit-background-clip:text;
+  background-clip:text;
+  animation:shine 5s linear infinite;
 }
 .section-label{
   background:linear-gradient(90deg, var(--teal), var(--amber));
@@ -937,6 +985,9 @@ section,
   flex-grow:0;
 }
 .card-links a{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
   font-family:'JetBrains Mono',monospace;
   font-size:15px;
   font-weight:500;
@@ -944,6 +995,7 @@ section,
   transition:color var(--t-fast) var(--ease);
 }
 .card-links a:hover{color:var(--amber);}
+.card-links svg{width:16px; height:16px; flex:none;}
 
 /* ---------- lightbox ----------
    The thumbnail does not fade into the lightbox, it *becomes* it: whichever
