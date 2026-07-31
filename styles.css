@@ -1,17 +1,44 @@
 :root{
-  --bg:#0F131A;
-  --bg-alt:#131922;
-  --card:#1A212C;
-  --border:#262E3B;
-  --border-strong:#3A4557;
+  --bg:#131922;
+  --bg-alt:#1A212C;
+  --card:#262E3B;
+  --border:#3A4557;
+  --border-strong:#56647B;
   --text:#ECEFF4;
   --text-muted:#8992A3;
   --text-dim:#545E6E;
   --amber:#FFB84D;
   --teal:#4DD8C0;
+  --green:#3FB950;
+  /* the same two accents as raw channels, so the canvas can dose them by alpha
+     without hardcoding the hex a sixth time */
+  --lit-warm:255,184,77;
+  --lit-cool:77,216,192;
   --max:1440px;
   --gap:24px;
+  /* one timing system: every authored transition picks a duration from this
+     scale and the same exponential ease-out, so the whole page reads as one
+     mechanism rather than a pile of independent effects */
   --ease:cubic-bezier(.16,1,.3,1);
+  --t-fast:.18s;
+  --t:.34s;
+  --t-slow:.62s;
+  --t-cine:.72s;
+}
+
+/* Smoothed scroll speed (px/frame), published by script.js and consumed by the
+   atmosphere layers below. Registered so it has a real initial value — without
+   one, every calc() reading it would be invalid before the first frame runs.
+   inherits:false on purpose: script.js writes it straight onto the two elements
+   that read it, so a per-frame write doesn't invalidate style for the whole
+   document the way setting it on :root would. */
+@property --vel{syntax:'<number>'; inherits:false; initial-value:0;}
+
+/* the panel-cover choreography: each cover panel hands its leading edge to the
+   panel beneath it as a named view timeline, so the one underneath can recede
+   over exactly the span of the sweep. See .panel-cue. */
+:root{
+  timeline-scope:--cue-about, --cue-projects, --cue-contact;
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -37,39 +64,30 @@ button:focus-visible{
   border-radius:3px;
 }
 
-/* background dot grid */
-.grid-bg{
-  position:fixed;
-  inset:0;
-  background-image:radial-gradient(circle, var(--border) 1px, transparent 1px);
-  background-size:28px 28px;
-  opacity:0.3;
-  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 90%);
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 90%);
-  pointer-events:none;
-  z-index:0;
-}
-
-/* film grain texture for depth */
+/* film grain texture for depth — grain intensifies with scroll speed, the way
+   film pushes when the camera moves */
 .noise-overlay{
   position:fixed;
   inset:0;
   z-index:5;
   pointer-events:none;
-  opacity:0.035;
+  opacity:clamp(0.035, calc(0.035 + var(--vel) * 0.0009), 0.085);
   mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* scroll progress */
+/* driven by transform:scaleX, not width — width would relayout every scroll
+   frame, transform stays on the compositor */
 .scroll-progress{
   position:fixed;
   top:0;left:0;
   height:3px;
-  width:0%;
+  width:100%;
+  transform:scaleX(0);
+  transform-origin:0 50%;
   background:linear-gradient(90deg, var(--amber), var(--teal));
   z-index:60;
-  transition:width .1s linear;
 }
 
 /* ---------- nav ---------- */
@@ -79,65 +97,62 @@ nav{
   left:0;
   right:0;
   z-index:50;
-  border-bottom:1px solid transparent;
-  transition:border-color .25s ease, background-color .25s ease;
-}
-nav.scrolled{
-  background:rgba(15,19,26,0.85);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border-bottom-color:var(--border);
 }
 .nav-inner{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  padding:18px 28px;
-  max-width:var(--max);
-  margin:0 auto;
-}
-.brand{
-  font-size:15px;
-  font-weight:500;
-  color:var(--teal);
-  letter-spacing:0.02em;
-}
-.nav-links{
   display:flex;
-  gap:28px;
+  justify-content:center;
+  padding:18px 28px;
+}
+/* one floating capsule, identical at the top of the page and while scrolling */
+.nav-bar{
+  display:flex;
   align-items:center;
-  grid-column:2;
-  justify-self:center;
+  gap:6px;
+  padding:6px;
+  border-radius:99px;
+  background:linear-gradient(180deg, rgba(38,46,59,0.95), rgba(19,25,34,0.95));
+  border:1px solid var(--border);
+  box-shadow:0 8px 24px rgba(0,0,0,0.35);
+}
+.brand{letter-spacing:0.02em;}
+.nav-links{
+  position:relative;
+  display:flex;
+  gap:2px;
+  align-items:center;
+}
+/* the active pill is one element that slides between links rather than a
+   background that blinks on and off; script.js sets its width/offset */
+.nav-indicator{
+  position:absolute;
+  left:0; top:0;
+  height:100%;
+  width:0;
+  border-radius:99px;
+  background:var(--text);
+  transition:transform var(--t) var(--ease), width var(--t) var(--ease);
 }
 .nav-links a{
   position:relative;
   font-size:14px;
   color:var(--text-muted);
-  padding-bottom:3px;
-  transition:color .2s ease;
+  padding:9px 16px;
+  border-radius:99px;
+  transition:color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
 }
-.nav-links a::after{
-  content:'';
-  position:absolute;
-  left:50%; right:50%;
-  bottom:0;
-  height:1px;
-  background:var(--teal);
-  transition:left .3s var(--ease), right .3s var(--ease);
-}
-.nav-links a:hover{color:var(--text);}
-.nav-links a:hover::after{left:0; right:0;}
+.nav-links a:hover{color:var(--text); background:rgba(255,255,255,0.07);}
+.nav-links a.active{color:var(--bg);}
 .status-pill{
   display:flex;
   align-items:center;
   gap:7px;
-  font-size:12px;
-  color:var(--text-muted);
-  border:1px solid var(--border);
-  padding:6px 12px;
+  font-size:12.5px;
+  color:var(--text);
+  border:1px solid var(--teal);
+  padding:8px 14px;
   border-radius:99px;
-  grid-column:3;
-  justify-self:end;
+  background:rgba(77,216,192,0.14);
+  margin-left:4px;
 }
 .status-dot{
   width:6px;height:6px;border-radius:50%;
@@ -169,12 +184,17 @@ nav.scrolled{
   justify-content:space-between;
   gap:48px;
 }
+/* the glow field stretches vertically with scroll speed — the same smeared-light
+   read you get from a long exposure while the camera is moving */
 .aurora-field{
   position:absolute;
   inset:-40px 0 auto 0;
   height:520px;
   z-index:0;
   pointer-events:none;
+  transform:scaleY(clamp(1, calc(1 + var(--vel) * 0.0032), 1.22));
+  transform-origin:50% 0;
+  will-change:transform;
 }
 .aurora{
   position:absolute;
@@ -200,10 +220,10 @@ nav.scrolled{
 .hero-content{position:relative; z-index:1; flex:1; min-width:0;}
 .hero-photo{position:relative; z-index:1; width:clamp(320px, 38vw, 680px); max-width:100%; flex-shrink:1;}
 .hero-eyebrow{
-  font-size:12px;
+  font-size:13px;
   letter-spacing:0.12em;
   margin-bottom:20px;
-  background:linear-gradient(100deg, var(--text-dim) 40%, var(--teal) 50%, var(--text-dim) 60%);
+  background:linear-gradient(100deg, var(--text-muted) 40%, var(--teal) 50%, var(--text-muted) 60%);
   background-size:200% 100%;
   -webkit-background-clip:text;
   background-clip:text;
@@ -215,6 +235,11 @@ nav.scrolled{
   font-size:clamp(40px, 7vw, 72px);
   font-weight:700;
   line-height:1.02;
+  background:linear-gradient(170deg, #FFFFFF 10%, var(--text) 45%, #7E8AA0 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
   animation:fadeUp .8s var(--ease) both;
   animation-delay:.15s;
 }
@@ -263,7 +288,7 @@ nav.scrolled{
   font-weight:500;
   border-radius:6px;
   overflow:hidden;
-  transition:border-color .2s ease, color .2s ease;
+  transition:border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
 .btn-primary{
   background:var(--amber);
@@ -276,7 +301,7 @@ nav.scrolled{
   width:40%; height:100%;
   background:linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
   transform:skewX(-20deg);
-  transition:left .6s ease;
+  transition:left var(--t-slow) var(--ease);
 }
 .btn-primary:hover::after{left:120%;}
 .btn-ghost{
@@ -384,9 +409,17 @@ nav.scrolled{
   color:var(--text-dim);
   white-space:pre;
 }
-.ascii-row{display:block; opacity:0; transition:opacity .5s var(--ease);}
+.ascii-row{display:block; opacity:0; transition:opacity var(--t-slow) var(--ease);}
 .ascii-row.show{opacity:1;}
-.spark{color:var(--teal); opacity:.3; animation:twinkle 2.6s ease-in-out infinite;}
+.spark{color:#F2D14E; opacity:.3; animation:twinkle 2.6s ease-in-out infinite;}
+/* colorised portrait: one hue per traced facial region (see script.js regions) */
+.f-skin{color:#EFC3A0;}
+.f-hair{color:#F0A3B4;}
+.f-iris{color:#3E9E6E;}
+.f-star{color:#F5D65C;}
+.f-sclera{color:#F4F7FB;}
+.f-mouth{color:#C4796A;}
+.f-chin{color:#D9A184;}
 @keyframes asciiScan{from{top:-40%;} to{top:100%;}}
 @keyframes twinkle{0%,100%{opacity:.25;} 50%{opacity:1;}}
 .term-result.show{animation:signFlash .7s ease-out .4s;}
@@ -407,14 +440,7 @@ nav.scrolled{
   border:1px solid var(--border);
 }
 .carousel-card img{width:100%; height:100%; object-fit:cover; display:block;}
-.carousel-card.enter-right{animation:card-enter-right .3s ease;}
-.carousel-card.enter-left{animation:card-enter-left .3s ease;}
-@keyframes card-enter-right{0%{opacity:.3; transform:translateX(40px);} 100%{opacity:1; transform:translateX(0);}}
-@keyframes card-enter-left{0%{opacity:.3; transform:translateX(-40px);} 100%{opacity:1; transform:translateX(0);}}
-.carousel-card.side.enter-right{animation:card-enter-right-side .3s ease;}
-.carousel-card.side.enter-left{animation:card-enter-left-side .3s ease;}
-@keyframes card-enter-right-side{0%{opacity:.15; transform:translateX(30px);} 100%{opacity:.45; transform:translateX(0);}}
-@keyframes card-enter-left-side{0%{opacity:.15; transform:translateX(-30px);} 100%{opacity:.45; transform:translateX(0);}}
+/* transforms are driven by the spring solver in script.js, not by keyframes */
 .carousel-card.active{box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); cursor:pointer; z-index:2;}
 .carousel-card.side{width:280px; height:375px; top:27px; opacity:.45; z-index:1;}
 .carousel-card.side#cardPrev{left:0;}
@@ -431,7 +457,7 @@ nav.scrolled{
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:color .15s ease, border-color .15s ease;
+  transition:color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
   flex-shrink:0;
 }
 .carousel-btn:hover{color:var(--teal); border-color:var(--teal);}
@@ -443,15 +469,8 @@ section{
   width:100%;
   padding:70px 0;
   border-top:1px solid var(--border);
-  background:radial-gradient(ellipse 640px 420px at 12% 0%, rgba(255,184,77,0.07), transparent 60%),
-              radial-gradient(ellipse 640px 420px at 88% 100%, rgba(77,216,192,0.07), transparent 60%),
-              var(--bg);
-  opacity:0;
-  filter:blur(6px);
-  transform:translateY(18px);
-  transition:opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease);
+  background:var(--bg);
 }
-section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
 .section-inner{
   max-width:var(--max);
   margin:0 auto;
@@ -469,14 +488,121 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   filter:none;
   transform:none;
 }
-.cover-panel:not(.hero){
-  background:radial-gradient(ellipse 640px 420px at 12% 0%, rgba(255,184,77,0.07), transparent 60%),
-              radial-gradient(ellipse 640px 420px at 88% 100%, rgba(77,216,192,0.07), transparent 60%),
-              var(--bg);
-}
 /* extra breathing room below the fixed nav — base 70px padding-top lands
    flush against the ~70px nav height once a panel is stuck at top:0 */
 .cover-panel:not(.hero){padding-top:120px;}
+
+/* ---------- canvas lighting ----------
+   The canvas was flat #131922 everywhere: the washes it did carry sat at 0.07
+   alpha, which is under the perceptual floor on a dark surface, so all five
+   panels read as the same slab of black.
+
+   Now each panel has ONE light, and hue follows meaning rather than decoration:
+   warm where the person is (hero, about), cool where the verifiable work is
+   (projects, certifications — teal is already this site's "proved it" colour, on
+   the concurrency proof and every live link). The light also swaps edge between
+   the two work panels, so the same source reads as repositioned rather than
+   repeated. Contact is the only panel lit from both sides at once: the two
+   sources finally converge on the hand-off, which is what makes it read as an
+   ending instead of one more section.
+
+   Because the panels cover each other, the lit top edge is what sweeps into
+   view during a transition — so the hue change IS the transition, not a
+   decoration sitting behind it.
+
+   One declaration owns the pattern and each panel only moves the knobs, so these
+   stay a system rather than five unrelated one-offs. var(--bg) is the last layer
+   in every stack and stays fully opaque: that is load-bearing, it is what stops
+   a permanently-stuck panel bleeding through the one above it.
+
+   Placed after .cover-panel so it wins on source order at equal specificity. */
+section,
+.cover-panel{
+  background:
+    radial-gradient(ellipse var(--warm-size, 1320px 820px) at var(--warm-at, 6% -14%),
+      rgba(var(--lit-warm), var(--warm, 0)), transparent 72%),
+    radial-gradient(ellipse var(--cool-size, 1320px 820px) at var(--cool-at, 94% -14%),
+      rgba(var(--lit-cool), var(--cool, 0)), transparent 72%),
+    var(--bg);
+}
+/* the hero already has the drifting aurora overhead, so it only needs a floor —
+   its lower third was reading as dead flat black */
+.hero{--warm:0.10; --warm-at:50% 124%; --warm-size:1500px 640px;}
+#about{--warm:0.23;}
+/* projects is ~3.4x taller than the other panels, so a corner-sized light would
+   die inside its first viewport and leave the rest flat — the ellipse is drawn
+   tall instead, so one source still covers the whole scroll-through */
+#projects{--cool:0.22; --cool-size:1700px 2300px;}
+#certifications{--cool:0.20; --cool-at:8% -14%;}
+/* the finale: both sources, arriving from opposite edges, meeting mid-panel */
+#contact{--warm:0.20; --warm-at:-8% 44%; --cool:0.20; --cool-at:108% 56%;}
+
+/* ---------- panel-cover choreography ----------
+   The cover panels are sticky and never release: once stuck they sit at top:0
+   forever and the next panel simply paints over them. That reads as a hard cut.
+   Each covering panel carries a 1px .panel-cue at its leading edge and exposes
+   it as a named view timeline; the panel *underneath* consumes that timeline to
+   sink away over exactly the span of the sweep. Because the cue is 1px tall its
+   `cover` range is one viewport of scroll, so the recede finishes at the precise
+   moment the covering panel locks — independent of how tall either panel is. */
+/* The cue has to live OUTSIDE the panel it belongs to. Chrome folds sticky
+   offset into a view timeline's range, and these panels are sticky with no
+   bottom constraint, so a cue nested inside one "travels" the entire document
+   and its cover range balloons from one viewport to the full page height —
+   measured: 5762px instead of 901px. As a plain body-level sibling sitting at
+   the panel's leading edge it stays put, and the negative margin keeps it out
+   of layout entirely. */
+.panel-cue{
+  height:1px;
+  margin-bottom:-1px;
+  pointer-events:none;
+}
+#cue-about{view-timeline-name:--cue-about;}
+#cue-projects{view-timeline-name:--cue-projects;}
+#cue-contact{view-timeline-name:--cue-contact;}
+
+@keyframes panelRecede{
+  0%{transform:none; opacity:1; filter:blur(0px);}
+  100%{transform:scale(.945) translateY(-26px); opacity:.28; filter:blur(7px);}
+}
+/* the covered panel is fully occluded at 100%, so drop it out of paint and out
+   of tab order entirely rather than leaving an invisible focusable layer and a
+   permanent filter pass beneath the panel on top of it */
+@keyframes panelRetire{
+  /* 94% of the sweep leaves the covered panel showing only in the top ~54px,
+     which the fixed nav already sits over — so nothing visible is dropped */
+  0%,94%{visibility:visible;}
+  95%,100%{visibility:hidden;}
+}
+
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .hero-inner,
+    #about .section-inner,
+    #certifications .section-inner{
+      animation:panelRecede linear both, panelRetire linear both;
+      animation-timeline:var(--cover-by), var(--cover-by);
+    }
+    .hero-inner{--cover-by:--cue-about;}
+    #about .section-inner{--cover-by:--cue-projects;}
+    #certifications .section-inner{--cover-by:--cue-contact;}
+  }
+  /* reduced motion keeps the occlusion benefit but drops the physical motion.
+     animation-duration is forced back to auto because the blanket 0.001ms
+     override below would otherwise collapse a scroll-driven animation's whole
+     range into its first instant — the visibility flip would fire immediately. */
+  @media (prefers-reduced-motion:reduce){
+    .hero-inner,
+    #about .section-inner,
+    #certifications .section-inner{
+      animation:panelRetire linear both;
+      animation-duration:auto !important;
+    }
+    .hero-inner{animation-timeline:--cue-about;}
+    #about .section-inner{animation-timeline:--cue-projects;}
+    #certifications .section-inner{animation-timeline:--cue-contact;}
+  }
+}
 .section-label{
   font-size:13px;
   color:var(--teal);
@@ -492,6 +618,17 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   font-size:28px;
   font-weight:600;
   margin-bottom:6px;
+  background:linear-gradient(100deg, var(--text) 30%, var(--teal) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+}
+.section-label{
+  background:linear-gradient(90deg, var(--teal), var(--amber));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 /* ---------- about (+ stack folded in as a side column) ---------- */
@@ -524,27 +661,32 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
 }
 .about-stack .section-label{margin-bottom:0;}
 .about-photo{flex-shrink:0;}
-.stack-group h3{
-  font-size:15px;
-  font-weight:600;
-  margin-bottom:14px;
-  color:var(--text);
-}
 .chip-row{
   display:flex;
   flex-wrap:wrap;
-  gap:8px;
+  gap:10px;
 }
 .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
   font-family:'JetBrains Mono',monospace;
   font-size:12.5px;
-  color:var(--text-muted);
-  border:1px solid var(--border);
-  padding:6px 10px;
-  border-radius:5px;
-  transition:border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+  color:var(--text);
+  background:rgba(255,255,255,0.07);
+  border:1px solid var(--border-strong);
+  padding:8px 14px;
+  border-radius:999px;
+  transition:border-color var(--t) var(--ease), color var(--t) var(--ease), transform var(--t) var(--ease), background var(--t) var(--ease);
 }
-.chip:hover{border-color:var(--border-strong);color:var(--text);transform:translateY(-2px);}
+.chip:hover{background:rgba(255,255,255,0.12);}
+.chip svg{
+  width:15px; height:15px; flex:none;
+  color:var(--c);
+  fill:none; stroke:currentColor;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+.chip:hover{border-color:var(--c,var(--border-strong));color:var(--text);transform:translateY(-2px);}
 
 /* ---------- projects (scroll-synced feature list) ---------- */
 .feature-grid{
@@ -558,13 +700,14 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   top:120px;
 }
 .feature-list-wrap{
-  height:280px;
+  /* exactly 3 rows — a 4th only ever showed as a half-faded ghost line */
+  height:210px;
   overflow:hidden;
   -webkit-mask-image:linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
   mask-image:linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
 }
 .feature-list{
-  transition:transform .5s var(--ease);
+  transition:transform var(--t-slow) var(--ease);
 }
 .feature-item{
   display:flex;
@@ -582,7 +725,7 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   line-height:1.2;
   color:var(--text-dim);
   cursor:pointer;
-  transition:color .3s ease;
+  transition:color var(--t) var(--ease);
 }
 .feature-item.active{color:var(--text);}
 .feature-index{
@@ -590,7 +733,7 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   font-weight:500;
   color:var(--text-dim);
   flex-shrink:0;
-  transition:color .3s ease;
+  transition:color var(--t) var(--ease);
 }
 .feature-item.active .feature-index{color:var(--teal);}
 .feature-detail{
@@ -599,9 +742,9 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   flex-direction:column;
   gap:14px;
 }
-.feature-detail p{color:var(--text-muted);font-size:15px;line-height:1.6;}
+.feature-detail p{color:var(--text-muted);font-size:17px;line-height:1.65;}
 .feature-detail p .proof{color:var(--teal);}
-.feature-detail .card-note{font-size:12px;color:var(--text-dim);}
+.feature-detail .card-note{font-size:13.5px;color:var(--text-muted);}
 .feature-images{
   display:flex;
   flex-direction:column;
@@ -617,7 +760,7 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   min-height:340px;
   max-height:560px;
   opacity:0.45;
-  transition:opacity .4s ease, border-color .3s ease;
+  transition:opacity var(--t) var(--ease), border-color var(--t) var(--ease);
 }
 .feature-image-card.active{
   opacity:1;
@@ -641,6 +784,41 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   display:block;
 }
 
+/* ---------- the one authored entrance ----------
+   Scroll-scrubbed, not triggered: the letterbox opens and the frame settles in
+   lockstep with the scroll position, so it reverses cleanly on the way back up.
+   Applied only to the two real sequences on the page (the five project frames
+   and the certification card) — not as a blanket per-section fade. */
+@keyframes filmIn{
+  from{clip-path:inset(19% 0 19% 0); transform:scale(1.07);}
+  to{clip-path:inset(0 0 0 0); transform:scale(1);}
+}
+@keyframes liftIn{
+  from{opacity:0; transform:translateY(26px);}
+  to{opacity:1; transform:translateY(0);}
+}
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    /* The card names its own timeline and the thumb inside consumes it. An
+       implicit view() on the thumb would resolve against the card rather than
+       the page, because the card's overflow:hidden makes it a scroll container
+       — the thumb never moves inside it, so the range is degenerate and the
+       animation sits pinned at its end value. Keeping clip-path on the inner
+       element also leaves the card's outer box-shadow unclipped. */
+    .feature-image-card{view-timeline-name:--frame;}
+    .feature-thumb{
+      animation:filmIn linear both;
+      animation-timeline:--frame;
+      animation-range:entry 8% entry 62%;
+    }
+    #certifications .card{
+      animation:liftIn linear both;
+      animation-timeline:view();
+      animation-range:entry 14% entry 58%;
+    }
+  }
+}
+
 /* ---------- projects / certifications ---------- */
 .project-grid{
   display:grid;
@@ -657,12 +835,8 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   flex-direction:column;
   gap:14px;
   overflow:hidden;
-  opacity:0;
-  filter:blur(6px);
-  transform:translateY(14px);
-  transition:opacity .7s var(--ease), transform .5s var(--ease), filter .7s var(--ease), border-color .3s ease, background-color .3s ease;
+  transition:transform var(--t-slow) var(--ease), border-color var(--t) var(--ease), background-color var(--t) var(--ease);
 }
-.card.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
 .card:hover{border-color:var(--border-strong);background:#1D2531;}
 .card::before{
   content:'';
@@ -670,7 +844,7 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   inset:0;
   background:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%), rgba(255,184,77,0.14), transparent 70%);
   opacity:0;
-  transition:opacity .35s ease;
+  transition:opacity var(--t) var(--ease);
   pointer-events:none;
   z-index:0;
 }
@@ -692,7 +866,7 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   height:100%;
   object-fit:cover;
   display:block;
-  transition:transform .4s var(--ease);
+  transition:transform var(--t) var(--ease);
 }
 .card-thumb:hover img, .card-thumb:hover video{transform:scale(1.04);}
 .card-top{
@@ -717,8 +891,8 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   border:1px solid var(--border);
 }
 .badge-dot{width:5px;height:5px;border-radius:50%;}
-.badge.shipped{color:var(--teal);border-color:rgba(77,216,192,0.35);}
-.badge.shipped .badge-dot{background:var(--teal);}
+.badge.shipped{color:var(--green);border-color:rgba(63,185,80,0.35);}
+.badge.shipped .badge-dot{background:var(--green);}
 .badge.concept{color:var(--text-muted);}
 .badge.concept .badge-dot{background:var(--text-dim);}
 
@@ -744,12 +918,12 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
 }
 .tag{
   font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:var(--text-dim);
-  background:var(--bg-alt);
-  border:1px solid var(--border);
-  padding:3px 8px;
-  border-radius:4px;
+  font-size:11.5px;
+  color:var(--text);
+  background:rgba(255,255,255,0.07);
+  border:1px solid var(--border-strong);
+  padding:5px 12px;
+  border-radius:99px;
 }
 .card-note{
   font-size:12px;
@@ -764,13 +938,45 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
 }
 .card-links a{
   font-family:'JetBrains Mono',monospace;
-  font-size:12.5px;
+  font-size:15px;
+  font-weight:500;
   color:var(--teal);
-  transition:color .2s ease;
+  transition:color var(--t-fast) var(--ease);
 }
 .card-links a:hover{color:var(--amber);}
 
-/* ---------- lightbox ---------- */
+/* ---------- lightbox ----------
+   The thumbnail does not fade into the lightbox, it *becomes* it: whichever
+   thumb was clicked is tagged `lb-media` for the outgoing snapshot, the tag
+   moves to the full-size element for the incoming one, and the browser morphs
+   the single shared box between the two. Stepping through the gallery morphs
+   between frame sizes on the same name. See script.js's `morph()`. */
+::view-transition-group(lb-media){
+  animation-duration:var(--t-cine);
+  animation-timing-function:var(--ease);
+}
+/* a plain crossfade rather than the blended default, and deliberately resolved
+   in the first half of the travel: the two snapshots have different aspect
+   ratios, so holding them at 50/50 for the whole morph would show doubled text
+   the entire way. Fading out early means most of the motion is the real frame
+   settling into place. */
+::view-transition-image-pair(lb-media){isolation:auto;}
+::view-transition-old(lb-media),
+::view-transition-new(lb-media){
+  animation-duration:calc(var(--t-cine) * 0.45);
+  animation-timing-function:ease;
+  height:100%;
+  object-fit:cover;
+  mix-blend-mode:normal;
+}
+::view-transition-old(root),
+::view-transition-new(root){
+  animation-duration:var(--t-slow);
+  animation-timing-function:ease;
+}
+.lightbox-image > img,
+.lightbox-image > video{view-transition-name:lb-media;}
+
 .lightbox{
   margin:auto;
   border:1px solid var(--border-strong);
@@ -813,7 +1019,7 @@ section.in-view{opacity:1;transform:translateY(0);filter:blur(0);}
   overflow:hidden;
   cursor:pointer;
   opacity:0.6;
-  transition:opacity .2s ease, border-color .2s ease;
+  transition:opacity var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
   flex-shrink:0;
 }
 .lightbox-thumbs button.active{opacity:1;border-color:var(--teal);}
@@ -867,7 +1073,7 @@ footer{
   align-items:center;
   gap:12px;
   word-break:break-all;
-  transition:color .25s var(--ease);
+  transition:color var(--t) var(--ease);
 }
 .contact-email:hover{color:var(--amber);}
 .copy-note{
@@ -876,7 +1082,7 @@ footer{
   color:var(--teal);
   margin-left:4px;
   opacity:0;
-  transition:opacity .2s ease;
+  transition:opacity var(--t-fast) var(--ease);
 }
 .copy-note.show{opacity:1;}
 .contact-phone{
@@ -900,7 +1106,7 @@ footer{
   border-radius:50%;
   border:1px solid var(--border);
   color:var(--text);
-  transition:border-color .2s ease, transform .2s ease, background-color .2s ease;
+  transition:border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
 }
 .icon-btn:hover{border-color:var(--border-strong);background:var(--card);transform:translateY(-2px);}
 
@@ -919,7 +1125,7 @@ footer{
   background:var(--card);
   color:var(--text);
   box-shadow:0 12px 30px -14px rgba(0,0,0,0.6);
-  transition:border-color .2s ease, transform .2s ease;
+  transition:border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
 }
 .back-to-top-fab:hover{border-color:var(--border-strong);transform:translateY(-2px);}
 .foot-note{
@@ -939,13 +1145,19 @@ footer{
   .hero-photo{order:-1;}
   .about-columns{flex-direction:column; gap:36px;}
   .cover-panel{position:relative; min-height:auto;}
+  /* panels don't cover each other at this width, they just scroll — so the
+     recede that sells the cover goes with it, rather than dimming and blurring
+     content the reader is still scrolling through */
+  .hero-inner,
+  #about .section-inner,
+  #certifications .section-inner{animation:none;}
 }
 
 @media (max-width:640px){
-  .nav-inner{padding:18px 16px;}
-  .nav-links{gap:12px;}
-  .nav-links a{font-size:12.5px;}
-  .status-pill span:not(.status-dot){display:none;}
+  .nav-inner{padding:14px 10px;}
+  .nav-links{gap:0;}
+  .nav-links a{font-size:12px; padding:7px 8px;}
+  .status-pill{display:none;}
   .hero{padding-top:64px;}
   .terminal-body{padding:20px 18px 22px;}
   .ascii-body{padding:14px 10px;}
@@ -959,5 +1171,7 @@ footer{
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
   html{scroll-behavior:auto;}
-  section, .card{opacity:1;transform:none;filter:none;}
+  /* the atmosphere layers stop reacting to scroll speed entirely */
+  .aurora-field{transform:none;}
+  .noise-overlay{opacity:0.035;}
 }

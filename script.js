@@ -1,12 +1,6 @@
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-// nav background on scroll
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 8);
-}, { passive: true });
-
 // in-page nav links: native anchor scrolling breaks once a target section is a
 // permanently-stuck `.cover-panel` (its rect.top/offsetTop track the current
 // scroll position, not its true document offset), so compute the real offset
@@ -29,31 +23,103 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
+// nav: highlight the section currently at the top. Offsets are cached for the
+// same reason scrollable is below — reading offsetHeight every scroll event
+// forces a layout.
+const navLinks = Array.from(document.querySelectorAll('.nav-links a'));
+let sectionTops = [];
+function measureSections(){
+  let t = 0;
+  sectionTops = topSections.map((el) => { const top = t; t += el.offsetHeight; return top; });
+  activeLink = null; // link widths move with the layout, so re-place the pill
+}
+const navIndicator = document.querySelector('.nav-indicator');
+let activeLink = null;
+function updateActiveLink(){
+  const y = window.scrollY + 120;
+  let i = 0;
+  while (i + 1 < sectionTops.length && sectionTops[i + 1] <= y) i++;
+  const link = navLinks.find((a) => a.getAttribute('href') === '#' + topSections[i].id);
+  if (!link || link === activeLink) return;
+  navLinks.forEach((a) => a.classList.toggle('active', a === link));
+  navIndicator.style.width = link.offsetWidth + 'px';
+  navIndicator.style.transform = 'translateX(' + link.offsetLeft + 'px)';
+  activeLink = link;
+}
+measureSections();
+updateActiveLink();
+window.addEventListener('resize', () => { measureSections(); updateActiveLink(); }, { passive: true });
+window.addEventListener('load', () => { measureSections(); updateActiveLink(); });
+window.addEventListener('scroll', updateActiveLink, { passive: true });
+
 // scroll progress bar
 const progress = document.getElementById('scroll-progress');
-function updateProgress(){
+// scrollHeight/clientHeight are cached: reading them forces a synchronous layout,
+// and doing that on every scroll event (i.e. every frame) is what makes scrolling
+// feel heavy. They only change on resize/load, so measure there instead.
+let scrollable = 0;
+function measureScrollable(){
   const h = document.documentElement;
-  const scrollable = h.scrollHeight - h.clientHeight;
-  const pct = scrollable > 0 ? (h.scrollTop / scrollable) * 100 : 0;
-  progress.style.width = pct + '%';
+  scrollable = h.scrollHeight - h.clientHeight;
 }
+function updateProgress(){
+  const pct = scrollable > 0 ? document.documentElement.scrollTop / scrollable : 0;
+  progress.style.transform = 'scaleX(' + pct + ')';
+}
+measureScrollable();
+window.addEventListener('resize', measureScrollable, { passive: true });
+window.addEventListener('load', measureScrollable);
 window.addEventListener('scroll', updateProgress, { passive: true });
 updateProgress();
 
-// scroll reveal
-const revealTargets = document.querySelectorAll('section, .card');
-if (!reduceMotion && 'IntersectionObserver' in window) {
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('in-view'), (i % 6) * 70);
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  revealTargets.forEach(el => io.observe(el));
-} else {
-  revealTargets.forEach(el => el.classList.add('in-view'));
+// scroll velocity, published as --vel (px/frame, smoothed) for the atmosphere
+// layers in styles.css to react to. The loop only runs while the page is
+// actually moving and shuts itself off once the value has decayed to nothing,
+// so an idle page costs zero frames.
+if (!reduceMotion) {
+  // written per element rather than on :root — --vel is registered with
+  // inherits:false so this only invalidates style for these three, instead of
+  // for every node in the document once a frame
+  const readers = ['.noise-overlay', '.aurora-field']
+    .map(s => document.querySelector(s))
+    .filter(Boolean);
+  let last = window.scrollY;
+  let vel = 0;
+  let running = false;
+  let published = null;
+
+  // Quantised, and skipped when unchanged. Both readers are expensive to
+  // invalidate — one is a full-screen mix-blend-mode layer, the other contains a
+  // blur(90px) — and a fresh value every frame dirties them every frame. The
+  // consumers clamp --vel into narrow ranges (grain .035-.085, glow scaleY
+  // 1-1.22), so a step of 3 moves grain by .0027 and scale by .0096: below the
+  // perceptual floor, but it collapses ~60 writes/sec into ~20 distinct values.
+  const STEP = 3;
+
+  function publish(v) {
+    if (v === published) return;
+    published = v;
+    for (const el of readers) el.style.setProperty('--vel', v);
+  }
+
+  function frame() {
+    const y = window.scrollY;
+    // exponential smoothing, so a single jumpy wheel tick doesn't spike the grain
+    vel += (Math.abs(y - last) - vel) * 0.22;
+    last = y;
+    if (vel < 0.05) {
+      vel = 0;
+      running = false;
+      publish('0');
+      return;
+    }
+    publish(String(Math.round(vel / STEP) * STEP));
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!running) { running = true; requestAnimationFrame(frame); }
+  }, { passive: true });
 }
 
 // typewriter role rotator
@@ -114,12 +180,40 @@ if (reduceMotion) {
   const asciiSparkCoords = [[0, 2], [0, 17], [1, 0], [1, 3], [1, 7], [1, 8], [1, 16], [1, 17], [1, 24], [1, 27], [2, 0], [2, 8], [2, 16], [2, 17], [2, 22], [2, 24], [2, 27], [3, 1], [3, 9], [3, 10], [3, 21], [3, 27], [4, 1], [4, 17], [4, 19], [4, 21], [4, 24], [4, 27], [5, 4], [5, 5], [5, 8], [5, 21], [6, 2], [6, 6], [6, 7], [6, 29], [7, 0], [7, 1], [7, 25], [8, 10], [9, 10], [10, 6], [11, 3], [11, 17], [11, 28], [11, 29], [12, 2], [12, 26], [12, 27], [12, 29], [13, 3], [13, 4], [13, 24]];
   const sparkSet = new Set(asciiSparkCoords.map(([y, x]) => y + ',' + x));
 
+  // feature map taken from the art's own geometry rather than hand-drawn boxes:
+  // the eyes and mouth are ellipses traced off the drawing, and outside those the
+  // glyph's own dot count separates the dithered hair from the solid-filled skin.
+  const ell = (y, x, cy, cx, ry, rx) => ((y - cy) / ry) ** 2 + ((x - cx) / rx) ** 2;
+  const dots = (ch) => {
+    let v = ch.charCodeAt(0) - 0x2800, n = 0;
+    while (v > 0) { n += v & 1; v >>= 1; }
+    return n;
+  };
+  const featureAt = (y, x, ch) => {
+    // star highlight, iris and white are three separate traced ellipses per eye
+    if (ell(y, x, 6.2, 22.9, 0.8, 2.0) <= 1 || ell(y, x, 9.55, 7.6, 0.75, 1.8) <= 1) return 'f-star';
+    if (ell(y, x, 5.0, 22.8, 2.2, 4.05) <= 1 || ell(y, x, 8.6, 6.85, 2.1, 3.45) <= 1) return 'f-iris';
+    if (ell(y, x, 5.1, 23.2, 3.4, 6.0) <= 1 || ell(y, x, 8.45, 5.9, 3.8, 5.5) <= 1) return 'f-sclera';
+    if (ell(y, x, 10.7, 19.1, 1.15, 1.8) <= 1) return 'f-mouth';
+    // the central column is solid face fill; its sparse glyphs are shading, not hair
+    if (y >= 5 && x >= 10 && x <= 18) return 'f-skin';
+    const n = dots(ch);
+    if (y >= 10 && x >= 19 && n <= 6) return 'f-chin';
+    return n <= 5 ? 'f-hair' : 'f-skin';
+  };
+
   const rows = asciiGrid.map((rowStr, y) => {
     const rowEl = document.createElement('span');
     rowEl.className = 'ascii-row';
     let buf = '';
+    let bufClass = '';
     const flush = () => {
-      if (buf) { rowEl.appendChild(document.createTextNode(buf)); buf = ''; }
+      if (!buf) return;
+      const span = document.createElement('span');
+      span.className = bufClass;
+      span.textContent = buf;
+      rowEl.appendChild(span);
+      buf = '';
     };
     for (let x = 0; x < rowStr.length; x++) {
       const ch = rowStr[x];
@@ -130,9 +224,11 @@ if (reduceMotion) {
         spark.textContent = ch;
         spark.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
         rowEl.appendChild(spark);
-      } else {
-        buf += ch;
+        continue;
       }
+      const cls = featureAt(y, x, ch);
+      if (cls !== bufClass) { flush(); bufClass = cls; }
+      buf += ch;
     }
     flush();
     return rowEl;
@@ -203,6 +299,35 @@ if (canHover && !reduceMotion) {
   let index = 0;
   let images = null;
   let video = null;
+  let originEl = null; // the thumbnail this lightbox grew out of
+
+  const canMorph = typeof document.startViewTransition === 'function' && !reduceMotion;
+
+  // Starting a transition while one is already running skips the old one, which
+  // rejects BOTH its ready and finished promises with an AbortError. Neither is
+  // an error worth reporting — a fast click just replacing a slower animation —
+  // so silence both, or rapid stepping throws unhandled rejections.
+  function start(mutate) {
+    const t = document.startViewTransition(mutate);
+    t.ready.catch(() => {});
+    return t.finished.catch(() => {});
+  }
+
+  // Runs `mutate` inside a View Transition with `carry` tagged as the shared
+  // element for the *outgoing* snapshot. The lightbox media picks the same
+  // `lb-media` name up from CSS, so the browser morphs one box between the two
+  // instead of cross-fading two unrelated ones. The tag has to be unique per
+  // snapshot, which is why it is cleared inside the callback rather than after.
+  function morph(carry, mutate) {
+    if (!canMorph) { mutate(); return; }
+    if (carry) carry.style.viewTransitionName = 'lb-media';
+    start(() => {
+      if (carry) carry.style.viewTransitionName = '';
+      mutate();
+    }).then(() => {
+      if (carry) carry.style.viewTransitionName = '';
+    });
+  }
 
   function renderThumbStrip() {
     if (!images || images.length < 2) {
@@ -225,28 +350,51 @@ if (canHover && !reduceMotion) {
     });
   }
 
-  function open(total, startIndex, itemImages, itemVideo) {
+  function open(total, startIndex, itemImages, itemVideo, source) {
     count = total;
     index = startIndex || 0;
     images = itemImages || null;
     video = itemVideo || null;
-    renderThumbStrip();
-    render();
-    dialog.showModal();
+    originEl = source || null;
+    morph(originEl, () => {
+      renderThumbStrip();
+      render();
+      dialog.showModal();
+    });
+  }
+
+  function close() {
+    // the tag moves onto the origin thumbnail for the incoming snapshot, so the
+    // full-size frame collapses back into the exact card it came from
+    if (!canMorph) { dialog.close(); return; }
+    const back = originEl;
+    start(() => {
+      dialog.close();
+      if (back) back.style.viewTransitionName = 'lb-media';
+    }).then(() => {
+      if (back) back.style.viewTransitionName = '';
+    });
+  }
+
+  // stepping through a gallery morphs between frame sizes on the same name,
+  // so the image reflows instead of blinking
+  function step(to) {
+    index = (to + count) % count;
+    if (!canMorph) { render(); return; }
+    start(render);
   }
 
   thumbStripEl.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
-    index = parseInt(btn.dataset.index, 10);
-    render();
+    step(parseInt(btn.dataset.index, 10));
   });
 
   thumbs.forEach((thumb) => {
     thumb.addEventListener('click', () => {
       const imgs = thumb.dataset.images ? thumb.dataset.images.split(',') : null;
       const vid = thumb.dataset.video || null;
-      open(parseInt(thumb.dataset.count, 10) || 1, 0, imgs, vid);
+      open(parseInt(thumb.dataset.count, 10) || 1, 0, imgs, vid, thumb.firstElementChild);
     });
   });
 
@@ -255,17 +403,18 @@ if (canHover && !reduceMotion) {
     if (playing) playing.pause();
   });
 
-  prevBtn.addEventListener('click', () => {
-    index = (index - 1 + count) % count;
-    render();
-  });
-  nextBtn.addEventListener('click', () => {
-    index = (index + 1) % count;
-    render();
-  });
-  closeBtn.addEventListener('click', () => dialog.close());
+  prevBtn.addEventListener('click', () => step(index - 1));
+  nextBtn.addEventListener('click', () => step(index + 1));
+  closeBtn.addEventListener('click', close);
   dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
+    if (e.target === dialog) close();
+  });
+  // Esc dismisses a <dialog> natively without firing our close(), so route the
+  // cancel event through the morph too
+  dialog.addEventListener('cancel', (e) => {
+    if (!canMorph) return;
+    e.preventDefault();
+    close();
   });
   window.openLightbox = open;
 })();
@@ -283,6 +432,41 @@ if (canHover && !reduceMotion) {
   const COUNT = photos.length;
   let index = 0;
 
+  // A damped spring, not a keyframe: `disp` is the stack's signed displacement
+  // (1 = thrown fully right) and it settles back to rest with a real overshoot,
+  // which is the part a fixed-duration CSS animation can't express. The side
+  // cards trail the active one, so the stack reads as one sprung object.
+  const STIFFNESS = 0.105;
+  const DAMPING = 0.76;
+  let disp = 0;
+  let vel = 0;
+  let raf = 0;
+
+  function paint() {
+    const d = disp;
+    const lift = 1 - Math.abs(d) * 0.055;
+    cardActive.style.transform =
+      'translate3d(' + (d * 48).toFixed(2) + 'px,0,0) rotate(' + (d * 2.4).toFixed(2) + 'deg) scale(' + lift.toFixed(4) + ')';
+    // trailing factor: the sides lag the active card, so the whole stack has
+    // secondary motion rather than moving as one rigid block
+    const t = (d * 30).toFixed(2);
+    cardPrev.style.transform = 'translate3d(' + t + 'px,0,0)';
+    cardNext.style.transform = 'translate3d(' + t + 'px,0,0)';
+  }
+
+  function settle() {
+    vel += -STIFFNESS * disp;
+    vel *= DAMPING;
+    disp += vel;
+    if (Math.abs(disp) < 0.0015 && Math.abs(vel) < 0.0015) {
+      disp = 0; vel = 0; raf = 0;
+      paint();
+      return;
+    }
+    paint();
+    raf = requestAnimationFrame(settle);
+  }
+
   function render(direction) {
     const prevIdx = (index - 1 + COUNT) % COUNT;
     const nextIdx = (index + 1) % COUNT;
@@ -290,14 +474,11 @@ if (canHover && !reduceMotion) {
     cardActive.querySelector('img').src = photos[index];
     cardNext.querySelector('img').src = photos[nextIdx];
 
-    if (direction) {
-      const enterClass = direction === 'left' ? 'enter-left' : 'enter-right';
-      [cardPrev, cardActive, cardNext].forEach((card) => {
-        card.classList.remove('enter-left', 'enter-right');
-        void card.offsetWidth;
-        card.classList.add(enterClass);
-      });
-    }
+    if (!direction || reduceMotion) return;
+    // throw the stack from the side the press came from, then let it spring back
+    disp = direction === 'left' ? -1 : 1;
+    vel = 0;
+    if (!raf) raf = requestAnimationFrame(settle);
   }
 
   prevBtn.addEventListener('click', () => {
@@ -310,7 +491,7 @@ if (canHover && !reduceMotion) {
   });
 
   cardActive.addEventListener('click', () => {
-    if (window.openLightbox) window.openLightbox(COUNT, index, photos);
+    if (window.openLightbox) window.openLightbox(COUNT, index, photos, null, cardActive.querySelector('img'));
   });
   cardActive.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
