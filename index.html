@@ -1,379 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sahutsakorn Phiriyanichakorn — Portfolio</title>
-<meta name="description" content="Backend & systems engineering portfolio.">
+<title>Sahutsakorn Phiriyanichakorn | Backend &amp; AI Developer</title>
+<meta name="description" content="Portfolio of Sahutsakorn (Ping) Phiriyanichakorn, a Computer Science student at Bangkok University focused on backend development and AI engineering.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2">
+<link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 
-<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
-<div class="noise-overlay" aria-hidden="true"></div>
+<canvas id="stars" aria-hidden="true"></canvas>
 
-<nav id="nav">
-  <div class="nav-inner">
-    <div class="nav-bar">
-      <div class="nav-links">
-        <span class="nav-indicator" aria-hidden="true"></span>
-        <a href="#home" class="brand">Home</a>
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#certifications">Certifications</a>
-        <a href="#contact">Contact</a>
-      </div>
-      <div class="status-pill">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span>Open to internships</span>
-      </div>
-    </div>
+<svg style="display:none" aria-hidden="true"><defs>
+  <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.13 8.94 7.48 10.39.55.1.75-.24.75-.53 0-.26-.01-1.13-.02-2.04-3.04.66-3.68-1.3-3.68-1.3-.5-1.26-1.22-1.6-1.22-1.6-.99-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.91.1-.71.38-1.2.7-1.47-2.43-.28-4.98-1.21-4.98-5.4 0-1.19.42-2.17 1.12-2.93-.11-.28-.49-1.4.11-2.91 0 0 .92-.29 3.01 1.12A10.5 10.5 0 0 1 12 6.1c.93 0 1.87.13 2.75.37 2.09-1.41 3.01-1.12 3.01-1.12.6 1.51.22 2.63.11 2.91.7.76 1.12 1.74 1.12 2.93 0 4.2-2.56 5.12-5 5.39.39.34.74 1.01.74 2.04 0 1.47-.01 2.66-.01 3.02 0 .29.2.64.76.53 4.35-1.45 7.48-5.55 7.48-10.39C23.02 5.24 18.27.5 12 .5Z"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M3 5h18v14H3z M3 6l9 7 9-7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path fill="currentColor" d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 2h9l5 5v15H6zM14 2v6h6M9 13h8M9 17h8"/></symbol>
+</defs></svg>
+
+<nav class="nav">
+  <a href="#home" class="logo">SP</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#certifications">Certifications</a>
+    <a href="#contact">Contact</a>
   </div>
 </nav>
 
-<header class="hero cover-panel" id="home">
-  <div class="aurora-field" aria-hidden="true">
-    <span class="aurora aurora-a"></span>
-    <span class="aurora aurora-b"></span>
+<!-- ============ HERO ============ -->
+<header class="hero" id="home">
+  <p class="pill"><span class="dot"></span>Open to internships · Bangkok, Thailand</p>
+  <h1><span class="grad">Sahutsakorn</span><span class="surname">Phiriyanichakorn</span></h1>
+  <p class="role">IT Intern · Backend Developer · AI Engineering</p>
+  <p class="hero-bio">Fourth-year Computer Science student at Bangkok University. I build APIs, data pipelines, and systems that run machine-learning models and local LLMs.</p>
+  <div class="hero-actions">
+    <a href="#projects" class="btn btn-grad">See my projects</a>
+    <a href="#contact" class="btn btn-ghost">Get in touch</a>
   </div>
-  <div class="hero-inner">
-    <div class="hero-content">
-      <p class="hero-eyebrow mono">PORTFOLIO — BACKEND &amp; SYSTEMS</p>
-      <h1>Sahutsakorn Phiriyanichakorn</h1>
-      <p class="hero-role mono"><span id="role-text"></span><span class="cursor">_</span></p>
-      <p class="hero-bio">
-        Final-year Information Technology and Innovation student (Computer Science) at Bangkok
-        University. I like backend and systems problems — <span class="proof">the kind you prove
-        with a stress test, not just a demo</span>.
-      </p>
-      <div class="hero-actions">
-        <a href="#projects" class="btn-primary">View projects</a>
-        <a href="#contact" class="btn-ghost">Get in touch</a>
-      </div>
-      <p class="hero-meta mono">nickname ping · age 23 · bangkok university</p>
-    </div>
-    <div class="hero-photo">
-      <div class="terminal">
-        <div class="titlebar">
-          <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
-          <div class="session-name">(˶>⩊<˶)</div>
-          <div class="live">Live</div>
-        </div>
-        <div class="terminal-body ascii-body">
-          <pre class="ascii-art" id="asciiArt" aria-label="ASCII art rendering"></pre>
-          <span class="ascii-timer mono" id="asciiTimer" aria-hidden="true"></span>
-        </div>
-      </div>
-    </div>
+  <div class="socials">
+    <a href="https://github.com/haru-mishi" target="_blank" rel="noopener" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+    <a href="https://www.linkedin.com/in/sahutsakorn-phiriyanichakorn/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg><use href="#i-linkedin"/></svg></a>
+    <a href="mailto:sahutsakorn.phir@bumail.net" aria-label="Email"><svg><use href="#i-mail"/></svg></a>
   </div>
 </header>
 
-<div class="panel-cue" id="cue-about" aria-hidden="true"></div>
-<section id="about" class="cover-panel">
-  <div class="section-inner">
-    <div class="section-head">
-      <h2>About Me</h2>
-      <p class="section-sub">A little more context than the resume gives.</p>
-    </div>
-    <div class="about-columns">
-      <div class="about-main">
-        <div class="about-body">
-          <p>I've been into computers since I was a kid, always at the top of my coding classes. That took me to Bangkok University, where I'm finishing my degree in Information Technology and Innovation / Computer Science.</p>
-          <p>Games are actually where that mindset came from. I never just played them — I wanted to know why a strategy worked, what was happening under a build or a matchup that made one choice beat another. That habit of pulling something apart to see how it actually holds together is the same one I use on code now: I don't trust that something works until I've tested it, not just assumed it.</p>
-          <p class="about-meta mono">nickname ping · age 23 · <svg aria-hidden="true"><use href="#i-award"/></svg>gpa 3.17</p>
-        </div>
-        <div class="about-stack">
-          <p class="section-label mono">// stack</p>
-          <svg style="display:none" aria-hidden="true"><defs>
-            <symbol viewBox="0 0 24 24" id="i-terminal"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-code"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-braces"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-coffee"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-layout"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-wind"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-hex"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-chart"><path d="M18 20V10M12 20V4M6 20v-6"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-net"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v4M12 11 6.5 17M12 11l5.5 6"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-eye"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-db"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-git"><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9v1a4 4 0 0 1-4 4H9M6 3v12"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-window"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-flow"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 12h4l6-6M11 12l6 6"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-cpu"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-github"><path fill="currentColor" stroke="none" d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.13 8.94 7.48 10.39.55.1.75-.24.75-.53 0-.26-.01-1.13-.02-2.04-3.04.66-3.68-1.3-3.68-1.3-.5-1.26-1.22-1.6-1.22-1.6-.99-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.91.1-.71.38-1.2.7-1.47-2.43-.28-4.98-1.21-4.98-5.4 0-1.19.42-2.17 1.12-2.93-.11-.28-.49-1.4.11-2.91 0 0 .92-.29 3.01 1.12A10.5 10.5 0 0 1 12 6.1c.93 0 1.87.13 2.75.37 2.09-1.41 3.01-1.12 3.01-1.12.6 1.51.22 2.63.11 2.91.7.76 1.12 1.74 1.12 2.93 0 4.2-2.56 5.12-5 5.39.39.34.74 1.01.74 2.04 0 1.47-.01 2.66-.01 3.02 0 .29.2.64.76.53 4.35-1.45 7.48-5.55 7.48-10.39C23.02 5.24 18.27.5 12 .5Z"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-award"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-figma"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></symbol>
-            <symbol viewBox="0 0 24 24" id="i-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></symbol>
-          </defs></svg>
-          <div class="chip-row">
-            <span class="chip" style="--c:#4584b6"><svg><use href="#i-terminal"/></svg>Python</span>
-            <span class="chip" style="--c:#00599C"><svg><use href="#i-code"/></svg>C++</span>
-            <span class="chip" style="--c:#F7DF1E"><svg><use href="#i-braces"/></svg>JavaScript</span>
-            <span class="chip" style="--c:#E76F00"><svg><use href="#i-coffee"/></svg>Java</span>
-            <span class="chip" style="--c:#E34F26"><svg><use href="#i-layout"/></svg>HTML5 &amp; CSS3</span>
-            <span class="chip" style="--c:#38BDF8"><svg><use href="#i-wind"/></svg>Tailwind CSS</span>
-            <span class="chip" style="--c:#F24E1E"><svg><use href="#i-figma"/></svg>Figma</span>
-            <span class="chip" style="--c:#539E43"><svg><use href="#i-hex"/></svg>Node.js</span>
-            <span class="chip" style="--c:#F7931E"><svg><use href="#i-chart"/></svg>Scikit-Learn / Pandas / NumPy</span>
-            <span class="chip" style="--c:#A855F7"><svg><use href="#i-net"/></svg>Local LLMs Deployment</span>
-            <span class="chip" style="--c:#60A5FA"><svg><use href="#i-eye"/></svg>Computer Vision</span>
-            <span class="chip" style="--c:#00758F"><svg><use href="#i-db"/></svg>MySQL</span>
-            <span class="chip" style="--c:#F05033"><svg><use href="#i-git"/></svg>Git &amp; GitHub</span>
-            <span class="chip" style="--c:#3B82F6"><svg><use href="#i-window"/></svg>VS Code Integration</span>
-            <span class="chip" style="--c:#8F0000"><svg><use href="#i-flow"/></svg>Node-RED</span>
-            <span class="chip" style="--c:#22C55E"><svg><use href="#i-cpu"/></svg>Wokwi Simulator</span>
-            <span class="chip" style="--c:#EF4444"><svg><use href="#i-shield"/></svg>Cybersecurity &amp; Privacy</span>
-          </div>
-        </div>
+<main>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <h2 class="title">About Me</h2>
+  <div class="about">
+    <div class="gallery about-gallery">
+      <button type="button" class="gallery-main" aria-label="Open photo full size"><img src="images/about/painting.jpg" alt="Ping painting at an outdoor art session" loading="lazy"></button>
+      <div class="thumbs">
+        <button type="button" class="active" data-src="images/about/painting.jpg"><img src="images/about/painting.jpg" alt="Painting" loading="lazy"></button>
+        <button type="button" data-src="images/about/campus.jpg"><img src="images/about/campus.jpg" alt="On campus" loading="lazy"></button>
+        <button type="button" data-src="images/about/casual.jpg"><img src="images/about/casual.jpg" alt="Casual portrait" loading="lazy"></button>
       </div>
-      <div class="about-photo">
-        <div class="carousel">
-          <button class="carousel-btn" id="carouselPrev" aria-label="Previous photo">&larr;</button>
-          <div class="carousel-stack">
-            <div class="carousel-card side" id="cardPrev"><img src="images/home/1.jpg" alt=""></div>
-            <div class="carousel-card active" id="cardActive" role="button" tabindex="0" aria-label="Open photo"><img src="images/home/2.png" alt="Photo 1"></div>
-            <div class="carousel-card side" id="cardNext"><img src="images/home/3.jpg" alt=""></div>
-          </div>
-          <button class="carousel-btn" id="carouselNext" aria-label="Next photo">&rarr;</button>
-        </div>
+    </div>
+    <div class="about-text">
+      <p>Hi, I'm <strong>Ping</strong> (Sahutsakorn Phiriyanichakorn), a 23-year-old, fourth-year <strong>Computer Science</strong> student at Bangkok University's School of Information Technology and Innovation. I've loved computers since I was a kid and was always near the top of my coding classes, which is what led me to study computer science.</p>
+      <p>I'm most interested in <strong>backend development</strong> and <strong>AI technology</strong>. That means building APIs and data pipelines, and deploying machine-learning models and <strong>local Large Language Models (LLMs)</strong>, which are AI chat models that run on your own server instead of a paid cloud service. My projects cover that range: a restaurant ordering (POS) backend that stays correct when many orders arrive at once, a neural network that reads handwritten Thai digits, and a self-hosted console for managing local LLMs.</p>
+      <p>Games are where my curiosity started. I never just played them. I wanted to understand <em>why</em> a strategy worked and what was happening under a build or a matchup that made one choice beat another. I still analyse game tournaments for fun, and I bring the same curiosity to code: pulling a system apart to see how it really fits together.</p>
+      <p>I want to gain <strong>international experience</strong> and work with diverse, global teams, to learn new perspectives and contribute to impactful tech projects. I thrive in cross-functional teams, adapt quickly to new tools, manage my time across parallel projects, and stay calm when solving problems under pressure.</p>
+      <p>Away from the keyboard I keep moving with bouldering, ice skating, basketball, running, and swimming. I recharge by drawing and traveling. I'm curious by nature and always up for a new experience.</p>
+      <div class="facts">
+        <div class="fact"><span class="fact-k">Education</span><span class="fact-v">B.Sc. Computer Science, Bangkok University (School of IT &amp; Innovation)</span><span class="fact-s">GPA 3.17 · Expected graduation Jun 2027</span></div>
+        <div class="fact"><span class="fact-k">Looking for</span><span class="fact-v">IT / Backend / AI Engineering internship</span><span class="fact-s">Based in Bangkok · open to international teams</span></div>
+        <div class="fact"><span class="fact-k">Languages</span><span class="fact-v">Thai (native) · English</span><span class="fact-s">Listening &amp; writing advanced · speaking intermediate</span></div>
+        <div class="fact"><span class="fact-k">Outside code</span><span class="fact-v">Bouldering · Ice skating · Basketball · Running · Swimming · Fitness</span><span class="fact-s">Also: drawing, traveling, gaming &amp; game tournament analysis</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="panel-cue" id="cue-projects" aria-hidden="true"></div>
+<!-- ============ PROJECTS ============ -->
 <section id="projects">
-  <div class="section-inner">
+  <h2 class="title">Featured Projects</h2>
+  <p class="lead">Each project covers the problem, what I built, how it works, the result, and why I picked each tool. Click any screenshot to see it full size.</p>
 
-  <div class="feature-grid">
-
-    <div class="feature-col">
-      <div class="section-head">
-        <h2>Projects</h2>
-        <p class="section-sub">What's actually shipped, with the backend decisions behind each one.</p>
+  <!-- 01 LLM admin console -->
+  <article class="case">
+    <div class="case-head">
+      <span class="case-num">01</span>
+      <div>
+        <p class="case-meta">Oct 2025 · Full-Stack · UI/UX Design</p>
+        <h3>Haru AI Hub: a self-hosted LLM admin console</h3>
+        <p class="case-sum">A web platform where a team can use AI chat models running on its own server, with per-user API keys, usage limits, and an admin panel.</p>
       </div>
-      <div class="feature-list-wrap">
-        <div class="feature-list">
-          <button type="button" class="feature-item" data-index="0"><span class="feature-index mono">01</span>Smart Room Monitoring System</button>
-          <button type="button" class="feature-item" data-index="1"><span class="feature-index mono">02</span>Thai Digit Recognition</button>
-          <button type="button" class="feature-item" data-index="2"><span class="feature-index mono">03</span>Echoes in the Dark</button>
-          <button type="button" class="feature-item" data-index="3"><span class="feature-index mono">04</span>Haru AI Hub</button>
-          <button type="button" class="feature-item" data-index="4"><span class="feature-index mono">05</span>KFSuay POS</button>
-        </div>
-      </div>
-      <div class="feature-detail"></div>
     </div>
 
-    <div class="feature-images">
-
-      <div class="feature-image-card">
-        <button type="button" class="feature-thumb project-thumb has-video" data-video="videos/projects/smart-room/demo.mp4">
-          <video src="videos/projects/smart-room/demo.mp4" poster="images/projects/smart-room-poster.jpg" muted playsinline preload="none"></video>
-        </button>
-        <div class="feature-detail-source" hidden>
-          <div class="card-top">
-            <span class="card-id mono">PRJ-01</span>
-            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
-          </div>
-          <p>ESP32 sensor node publishing occupancy, temperature, and humidity over MQTT to a Node-RED dashboard. Presence detection runs a small state machine (entry timestamp, dwell threshold, cooldown) to turn raw ultrasonic readings into a reliable people count.</p>
-          <span class="card-domain mono">IOT / BACKEND</span>
-          <div class="card-tags">
-            <span class="tag">ESP32</span>
-            <span class="tag">MQTT</span>
-            <span class="tag">Node-RED</span>
-          </div>
-          <div class="card-links">
-            <a href="https://github.com/haru-mishi/IOT_ultra_sonic_sensor_density" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"/></svg>GitHub &rarr;</a>
-          </div>
-        </div>
+    <div class="gallery">
+      <button type="button" class="gallery-main" aria-label="Open screenshot full size"><img src="images/projects/haru-ai-hub/2.png" alt="Haru AI Hub dashboard" loading="lazy"></button>
+      <p class="gallery-cap">Dashboard: active API keys, available models, and this month's token usage against the user's quota.</p>
+      <div class="thumbs">
+        <button type="button" class="active" data-src="images/projects/haru-ai-hub/2.png" data-cap="Dashboard: active API keys, available models, and this month's token usage against the user's quota."><img src="images/projects/haru-ai-hub/2.png" alt="Dashboard" loading="lazy"></button>
+        <button type="button" data-src="images/projects/haru-ai-hub/1.png" data-cap="Login screen. The role (user or admin) decides which screens you can see after signing in."><img src="images/projects/haru-ai-hub/1.png" alt="Login" loading="lazy"></button>
+        <button type="button" data-src="images/projects/haru-ai-hub/3.png" data-cap="Creating an API key. Each key has an allow-list, so it can only call the models ticked here (local Ollama models, OpenAI models, embedding models)."><img src="images/projects/haru-ai-hub/3.png" alt="API key allow-list" loading="lazy"></button>
+        <button type="button" data-src="images/projects/haru-ai-hub/4.png" data-cap="Chat with the local model. The model picker in the top-right is a swappable reference, so a new model can be plugged in without changing code."><img src="images/projects/haru-ai-hub/4.png" alt="Chat" loading="lazy"></button>
+        <button type="button" data-src="images/projects/haru-ai-hub/5.png" data-cap="Profile settings: users edit their own details and see how much of their monthly token quota is left."><img src="images/projects/haru-ai-hub/5.png" alt="Profile settings" loading="lazy"></button>
+        <button type="button" data-src="images/projects/haru-ai-hub/6.png" data-cap="Admin Control Center, users tab: admins see every account's role and can suspend or re-activate it."><img src="images/projects/haru-ai-hub/6.png" alt="Admin user management" loading="lazy"></button>
+        <button type="button" data-src="images/projects/haru-ai-hub/7.png" data-cap="Admin Control Center, token tab: how much each user has consumed and their share of the total."><img src="images/projects/haru-ai-hub/7.png" alt="Admin token usage" loading="lazy"></button>
       </div>
-
-      <div class="feature-image-card">
-        <button type="button" class="feature-thumb project-thumb has-image" data-count="3" data-images="images/projects/thai-digits/1.png,images/projects/thai-digits/2.png,images/projects/thai-digits/3.png">
-          <img src="images/projects/thai-digits/1.png" alt="Thai Digit Recognition screenshot">
-        </button>
-        <div class="feature-detail-source" hidden>
-          <div class="card-top">
-            <span class="card-id mono">PRJ-02</span>
-            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
-          </div>
-          <p>10-class digit CNN (~92% accuracy) served through a Flask API. Freehand strokes are segmented and composed into multi-digit numbers of any length; an explicit stroke-boundary signal resolves touching digits that proximity-based heuristics can't disambiguate.</p>
-          <span class="card-domain mono">AI / WEB</span>
-          <div class="card-tags">
-            <span class="tag">Python</span>
-            <span class="tag">Flask</span>
-            <span class="tag">TensorFlow</span>
-          </div>
-          <p class="card-note">Free-tier server sleeps when idle — first load after a while can take ~30-60s to wake up.</p>
-          <div class="card-links">
-            <a href="https://thai-digits-predict.onrender.com" target="_blank" rel="noopener">Live Demo &rarr;</a>
-            <a href="https://github.com/haru-mishi/thai_digits_predict" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"/></svg>GitHub &rarr;</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="feature-image-card">
-        <button type="button" class="feature-thumb project-thumb has-video" data-video="videos/projects/echoes-in-the-dark/demo.mp4">
-          <video src="videos/projects/echoes-in-the-dark/demo.mp4" poster="images/projects/echoes-in-the-dark-poster.jpg" muted playsinline preload="none"></video>
-        </button>
-        <div class="feature-detail-source" hidden>
-          <div class="card-top">
-            <span class="card-id mono">PRJ-03</span>
-            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
-          </div>
-          <p>A short horror-themed exploration game built in GameMaker Studio, made as an object-oriented programming exercise — the player, enemies, and each interactable (locked doors, readable objects) are modeled as separate objects with their own behavior and state.</p>
-          <span class="card-domain mono">GAME / OOP</span>
-          <div class="card-tags">
-            <span class="tag">GameMaker</span>
-            <span class="tag">OOP</span>
-          </div>
-          <div class="card-links">
-            <a href="https://github.com/haru-mishi/Echoes-in-the-dark" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"/></svg>GitHub &rarr;</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="feature-image-card">
-        <button type="button" class="feature-thumb project-thumb has-image" data-count="7" data-images="images/projects/haru-ai-hub/2.png,images/projects/haru-ai-hub/1.png,images/projects/haru-ai-hub/3.png,images/projects/haru-ai-hub/4.png,images/projects/haru-ai-hub/5.png,images/projects/haru-ai-hub/6.png,images/projects/haru-ai-hub/7.png">
-          <img src="images/projects/haru-ai-hub/2.png" alt="Haru AI Hub screenshot">
-        </button>
-        <div class="feature-detail-source" hidden>
-          <div class="card-top">
-            <span class="card-id mono">PRJ-04</span>
-            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
-          </div>
-          <p>Self-hosted admin console for local LLMs, with role-scoped multi-user access: users manage only their own API keys and usage, while admins get full oversight across users, models, and token consumption. Each API key is restricted to an allow-list of models, and chat talks to a local Ollama instance through a swappable model reference rather than a hardcoded one.</p>
-          <span class="card-domain mono">AI / WEB</span>
-          <div class="card-tags">
-            <span class="tag">Next.js</span>
-            <span class="tag">React</span>
-            <span class="tag">Ollama</span>
-          </div>
-          <div class="card-links">
-            <a href="https://github.com/haru-mishi/haru-chat-bot" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"/></svg>GitHub &rarr;</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="feature-image-card">
-        <button type="button" class="feature-thumb project-thumb has-image" data-count="3" data-images="images/projects/kfsuay-pos/1.png,images/projects/kfsuay-pos/2.png,images/projects/kfsuay-pos/3.png">
-          <img src="images/projects/kfsuay-pos/1.png" alt="KFSuay POS register screenshot">
-        </button>
-        <div class="feature-detail-source" hidden>
-          <div class="card-top">
-            <span class="card-id mono">PRJ-05</span>
-            <span class="badge shipped"><span class="badge-dot"></span>shipped</span>
-          </div>
-          <p>A FastAPI + Postgres backend slice proving concurrent orders can't oversell shared stock: a <code>SELECT ... FOR UPDATE</code> row lock serializes contention on the order endpoint, so 30 simultaneous requests against 10 units of stock resolve to <span class="proof">exactly 10 accepted and 20 cleanly rejected — never negative, never double-sold</span>. Wrapped in a small register-style demo UI, with the stress test tucked behind a hidden control since the lock is the point, not the ordering flow.</p>
-          <span class="card-domain mono">BACKEND</span>
-          <div class="card-tags">
-            <span class="tag">FastAPI</span>
-            <span class="tag">Postgres</span>
-            <span class="tag">psycopg</span>
-          </div>
-          <div class="card-links">
-            <a href="https://github.com/haru-mishi/kfsuay-pos/blob/main/DESIGN.md" target="_blank" rel="noopener">Design Doc &rarr;</a>
-            <a href="https://github.com/haru-mishi/kfsuay-pos" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"/></svg>GitHub &rarr;</a>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </div>
+
+    <div class="case-body">
+      <div class="case-block">
+        <h4>The problem</h4>
+        <p>Cloud AI APIs cost money per request and send your data to a third party. A team that runs its own model (with <strong>Ollama</strong>) still needs the boring parts: accounts, keys, limits, and someone who can see who is using what.</p>
+      </div>
+      <div class="case-block">
+        <h4>What I built</h4>
+        <p>A role-based web app with 6 core screens (login, dashboard, API keys, chat, profile, admin console), designed first in Figma with a documented design system so every screen uses the same colors, spacing, and components.</p>
+      </div>
+      <div class="case-block">
+        <h4>How it works</h4>
+        <ul>
+          <li>The backend talks to the local Ollama model over HTTP. It trims the conversation history to fit the model's context window, uses tuned sampling settings, and gives up cleanly after a <strong>30-second timeout</strong> so a slow model can't hang the app.</li>
+          <li><strong>Users</strong> see only their own keys and usage. <strong>Admins</strong> see everyone's accounts, models, and token consumption.</li>
+          <li>Every API key is scoped with an <strong>allow-list</strong> of models it may call, and model names are <strong>swappable references</strong> instead of hard-coded values.</li>
+          <li>User input and model output are <strong>sanitized</strong> (cleaned of unsafe content) to block injection attacks.</li>
+        </ul>
+      </div>
+      <div class="case-block">
+        <h4>Tech used &amp; why</h4>
+        <dl class="why">
+          <dt>Next.js + React</dt><dd>One framework for both the screens and the API routes, so frontend and backend live in one project.</dd>
+          <dt>Tailwind CSS</dt><dd>Made it quick to apply the design system consistently across all 6 screens.</dd>
+          <dt>Ollama</dt><dd>Runs open-source LLMs locally and exposes them over a simple HTTP API.</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="case-links">
+      <a href="https://github.com/haru-mishi/haru-chat-bot" target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><svg><use href="#i-github"/></svg>View code</a>
+    </div>
+  </article>
+
+  <!-- 02 Thai digits -->
+  <article class="case">
+    <div class="case-head">
+      <span class="case-num">02</span>
+      <div>
+        <p class="case-meta">May 2026 · Machine Learning · CNN Training</p>
+        <h3>Thai Handwritten-Digit Recognition</h3>
+        <p class="case-sum">Draw Thai numerals (๐–๙) on a canvas and a neural network I trained reads them back as numbers, including multi-digit numbers of any length.</p>
+      </div>
+    </div>
+
+    <div class="gallery">
+      <button type="button" class="gallery-main" aria-label="Open screenshot full size"><img src="images/projects/thai-digits/1.png" alt="Thai digit app reading ๕๖ as 56" loading="lazy"></button>
+      <p class="gallery-cap">Drawing ๕๖. The app splits the strokes into two digits and reads 56. The panel on the right shows how confident the model is in each digit.</p>
+      <div class="thumbs">
+        <button type="button" class="active" data-src="images/projects/thai-digits/1.png" data-cap="Drawing ๕๖. The app splits the strokes into two digits and reads 56. The panel on the right shows how confident the model is in each digit."><img src="images/projects/thai-digits/1.png" alt="56" loading="lazy"></button>
+        <button type="button" data-src="images/projects/thai-digits/2.png" data-cap="Drawing ๘๒ → 82. Each digit is classified separately, then the digits are joined into one number."><img src="images/projects/thai-digits/2.png" alt="82" loading="lazy"></button>
+        <button type="button" data-src="images/projects/thai-digits/3.png" data-cap="A single digit, ๗ → 7, with its confidence score."><img src="images/projects/thai-digits/3.png" alt="7" loading="lazy"></button>
+      </div>
+    </div>
+
+    <div class="case-body">
+      <div class="case-block">
+        <h4>The problem</h4>
+        <p>Most handwriting models are trained on Arabic numerals (0–9). Thai numerals look very different, and people write multi-digit numbers with strokes that often touch, which makes it hard to tell where one digit ends.</p>
+      </div>
+      <div class="case-block">
+        <h4>What I built</h4>
+        <p>A 10-class <strong>Convolutional Neural Network (CNN)</strong>, a type of neural network designed for images, trained on about <strong>3,880 handwritten images</strong> and served as a web app through a Flask API.</p>
+      </div>
+      <div class="case-block">
+        <h4>How it works</h4>
+        <ul>
+          <li><strong>Data augmentation:</strong> during training I generated rotated, shifted, and scaled copies of each image, so the model learns shapes rather than memorizing exact pixels.</li>
+          <li><strong>Simpler was better:</strong> removing the BatchNormalization layers improved accuracy on this small dataset. I tested it rather than assuming the textbook architecture was best.</li>
+          <li><strong>Test-time augmentation:</strong> when predicting, the API checks several slightly altered versions of the drawing and averages the answers for a more stable result.</li>
+          <li><strong>Touching digits:</strong> the <em>Next Digit</em> button sends an explicit "new digit starts here" flag, which solves cases that guessing by stroke distance can't.</li>
+        </ul>
+      </div>
+      <div class="case-block">
+        <h4>Result</h4>
+        <p class="result"><span class="big">~92%</span> of test digits the model had never seen were recognized correctly.</p>
+        <h4>Tech used &amp; why</h4>
+        <dl class="why">
+          <dt>TensorFlow</dt><dd>Used to build and train the CNN.</dd>
+          <dt>Flask</dt><dd>A lightweight Python web server that exposes the model at a <code>/predict</code> endpoint.</dd>
+          <dt>Python</dt><dd>Covers the whole pipeline, from image preprocessing to training to serving.</dd>
+        </dl>
+      </div>
+    </div>
+    <p class="note">The live demo runs on a free server that sleeps when idle, so the first visit can take 30–60 seconds to load.</p>
+    <div class="case-links">
+      <a href="https://thai-digits-predict.onrender.com/" target="_blank" rel="noopener" class="btn btn-grad btn-sm"><svg><use href="#i-ext"/></svg>Try live demo</a>
+      <a href="https://github.com/haru-mishi/thai_digits_predict" target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><svg><use href="#i-github"/></svg>View code</a>
+    </div>
+  </article>
+
+  <!-- 03 KFSuay -->
+  <article class="case">
+    <div class="case-head">
+      <span class="case-num">03</span>
+      <div>
+        <p class="case-meta">Jul 2026 · Backend Development</p>
+        <h3>KFSuay: a concurrency-safe restaurant POS backend</h3>
+        <p class="case-sum">A Point-of-Sale ordering backend for a restaurant chain that never sells more stock than a branch actually has, even when many orders arrive at the same moment.</p>
+      </div>
+    </div>
+
+    <div class="gallery">
+      <button type="button" class="gallery-main" aria-label="Open screenshot full size"><img src="images/projects/kfsuay-pos/2.png" alt="KFSuay register after the rush test" loading="lazy"></button>
+      <p class="gallery-cap">After the rush test: 30 orders fired at once against 10 buckets in stock. The order log shows exactly 10 ACCEPTED and 20 SOLD OUT, and the item flips to sold out.</p>
+      <div class="thumbs">
+        <button type="button" class="active" data-src="images/projects/kfsuay-pos/2.png" data-cap="After the rush test: 30 orders fired at once against 10 buckets in stock. The order log shows exactly 10 ACCEPTED and 20 SOLD OUT, and the item flips to sold out."><img src="images/projects/kfsuay-pos/2.png" alt="Rush test result" loading="lazy"></button>
+        <button type="button" data-src="images/projects/kfsuay-pos/1.png" data-cap="The register before the test. Each menu tile shows the live stock left at this branch (e.g. “10 left”)."><img src="images/projects/kfsuay-pos/1.png" alt="Register idle" loading="lazy"></button>
+        <button type="button" data-src="images/projects/kfsuay-pos/3.png" data-cap="A normal checkout ends with an order confirmation and a QR receipt."><img src="images/projects/kfsuay-pos/3.png" alt="QR receipt" loading="lazy"></button>
+      </div>
+    </div>
+
+    <div class="case-body">
+      <div class="case-block">
+        <h4>The problem</h4>
+        <p>If two cashiers sell the last item at the same instant, a naive backend reads "1 left" twice and sells it twice. This is called a <strong>race condition</strong>, and it leads to overselling and negative stock.</p>
+      </div>
+      <div class="case-block">
+        <h4>What I built</h4>
+        <p>A <strong>FastAPI</strong> order endpoint backed by <strong>PostgreSQL</strong> for a multi-branch POS, with a small register-style UI for the demo, all packaged with <strong>Docker Compose</strong> so it starts with one command.</p>
+      </div>
+      <div class="case-block">
+        <h4>How it works</h4>
+        <ul>
+          <li>Each order runs inside a <strong>database transaction</strong>, so all of its steps succeed or fail together.</li>
+          <li><code>SELECT … FOR UPDATE</code> <strong>locks the stock row</strong>. A second order for the same item waits until the first one finishes, then sees the updated count.</li>
+          <li>As a second safety net, a <strong>database constraint</strong> rejects any change that would push stock below zero, even if the application code had a bug.</li>
+          <li>I wrote up the trade-off between <strong>pessimistic locking</strong> (lock first, used here) and <strong>optimistic locking</strong> (check for conflicts afterwards and retry) in a design document, along with a roadmap.</li>
+        </ul>
+      </div>
+      <div class="case-block">
+        <h4>Result</h4>
+        <p class="result"><span class="big">10 / 20</span> A load script fires 30 simultaneous orders at 10 units of stock. Exactly 10 succeed, 20 are cleanly rejected, and stock never drops below 0.</p>
+        <h4>Tech used &amp; why</h4>
+        <dl class="why">
+          <dt>FastAPI</dt><dd>A fast Python API framework with automatic request validation and docs.</dd>
+          <dt>PostgreSQL</dt><dd>Provides the transactions, row locks, and constraints that make the guarantee hold.</dd>
+          <dt>psycopg</dt><dd>The Python driver I used to write the SQL by hand, so the locking stays explicit and easy to follow.</dd>
+          <dt>Docker</dt><dd>Anyone can run the API and database together with a single command.</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="case-links">
+      <a href="https://github.com/haru-mishi/kfsuay-pos/blob/main/DESIGN.md" target="_blank" rel="noopener" class="btn btn-grad btn-sm"><svg><use href="#i-doc"/></svg>Read design doc</a>
+      <a href="https://github.com/haru-mishi/kfsuay-pos" target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><svg><use href="#i-github"/></svg>View code</a>
+    </div>
+  </article>
+
+  <h3 class="subtitle">Other Projects</h3>
+  <div class="minis">
+    <article class="mini">
+      <video controls preload="none" playsinline poster="images/projects/smart-room-poster.jpg" src="videos/projects/smart-room/demo.mp4"></video>
+      <div class="mini-body">
+        <p class="case-meta">IoT · Backend</p>
+        <h4>Smart Room Monitoring System</h4>
+        <p>Counts how many people are in a room and tracks temperature and humidity in real time. An <strong>ESP32</strong> microcontroller reads an ultrasonic sensor and sends data over <strong>MQTT</strong> (a lightweight messaging protocol for IoT devices) to a <strong>Node-RED</strong> dashboard. A small state machine (entry time, minimum stay, cooldown) turns noisy distance readings into a reliable people count.</p>
+        <a href="https://github.com/haru-mishi/IOT_ultra_sonic_sensor_density" target="_blank" rel="noopener" class="link"><svg><use href="#i-github"/></svg>View code</a>
+      </div>
+    </article>
+    <article class="mini">
+      <video controls preload="none" playsinline poster="images/projects/echoes-in-the-dark-poster.jpg" src="videos/projects/echoes-in-the-dark/demo.mp4"></video>
+      <div class="mini-body">
+        <p class="case-meta">Game · Object-Oriented Programming</p>
+        <h4>Echoes in the Dark</h4>
+        <p>A short horror exploration game made in <strong>GameMaker Studio</strong> as an object-oriented programming exercise. The player, the enemies, and every interactable (locked doors, readable notes) are separate objects, each with its own state and behavior.</p>
+        <a href="https://github.com/haru-mishi/Echoes-in-the-dark" target="_blank" rel="noopener" class="link"><svg><use href="#i-github"/></svg>View code</a>
+      </div>
+    </article>
   </div>
 </section>
 
-<section id="certifications" class="cover-panel">
-  <div class="section-inner">
-  <div class="section-head">
-    <h2>Certifications</h2>
-    <p class="section-sub">Courses completed outside of coursework.</p>
-  </div>
-
-  <div class="project-grid">
-
-    <article class="card">
-      <button type="button" class="card-thumb has-image project-thumb" data-count="1" data-images="images/certifications/coding-interview.jpg">
-        <img src="images/certifications/coding-interview.jpg" alt="Master the Coding Interview: Data Structures + Algorithms certificate">
-      </button>
-      <div class="card-top">
-        <span class="card-id mono">Jul 2026</span>
-      </div>
-      <h3>Master the Coding Interview: Data Structures + Algorithms</h3>
-      <p>20-hour Udemy course on data structures and algorithms for coding interviews, taught by Andrei Neagoie.</p>
-      <span class="card-domain mono">UDEMY</span>
-      <div class="card-links">
-        <a href="https://ude.my/UC-ee92adb3-e28e-4787-a1b9-c3b20921d601" target="_blank" rel="noopener">Verify &rarr;</a>
-      </div>
-    </article>
-
-    <article class="card">
-      <button type="button" class="card-thumb has-image project-thumb" data-count="1" data-images="images/certifications/ai-governance.jpg">
-        <img src="images/certifications/ai-governance.jpg" alt="AI Governance &amp; Ethics certificate">
-      </button>
-      <div class="card-top">
-        <span class="card-id mono">Dec 2025</span>
-      </div>
-      <h3>AI Governance &amp; Ethics</h3>
-      <p>Ethics, governance and the legal framework around applying AI — a 2-hour online course from Thailand's Digital Government Development Agency.</p>
-      <span class="card-domain mono">TDGA</span>
-    </article>
-
-  </div>
+<!-- ============ SKILLS ============ -->
+<section id="skills">
+  <h2 class="title">Skills &amp; Technologies</h2>
+  <p class="lead">What I use each group of tools for, and where you can see it in my projects.</p>
+  <div class="skills">
+    <div class="skill">
+      <h3>Backend &amp; API</h3>
+      <p>I design REST APIs, the endpoints other apps call to read and change data. That includes validating input, handling timeouts and errors, and keeping data correct under load. <span class="where">Used in KFSuay, Haru AI Hub, and Thai Digits.</span></p>
+      <div class="chips"><span>FastAPI</span><span>Flask</span><span>Node.js</span><span>Next.js</span><span>React</span><span>REST API</span></div>
+    </div>
+    <div class="skill">
+      <h3>AI &amp; Data Science</h3>
+      <p>I train and evaluate models end to end, from cleaning data and augmenting images to measuring accuracy on data the model hasn't seen. I also self-host LLMs with Ollama instead of paying for cloud APIs. <span class="where">Used in Thai Digits and Haru AI Hub.</span></p>
+      <div class="chips"><span>TensorFlow</span><span>Scikit-Learn</span><span>Pandas</span><span>NumPy</span><span>Computer Vision</span><span>Local LLM (Ollama)</span></div>
+    </div>
+    <div class="skill">
+      <h3>Databases</h3>
+      <p>I design tables and write SQL directly. I use transactions, row locks, and constraints so the database enforces the rules even when the application code has a bug. <span class="where">Used in KFSuay.</span></p>
+      <div class="chips"><span>PostgreSQL</span><span>MySQL</span><span>psycopg</span></div>
+    </div>
+    <div class="skill">
+      <h3>Programming</h3>
+      <p>Python is my main language for backend and ML work. I've used Java and C++ for coursework, data structures, and algorithms, and JavaScript for web apps. <span class="where">Python across most projects.</span></p>
+      <div class="chips"><span>Python</span><span>Java</span><span>C++</span><span>JavaScript</span><span>SQL</span></div>
+    </div>
+    <div class="skill">
+      <h3>Web &amp; IoT</h3>
+      <p>I design screens in Figma, then build them with HTML, CSS, and Tailwind. On the hardware side, I've programmed ESP32 boards that send sensor data over MQTT to Node-RED dashboards. <span class="where">Used in Haru AI Hub and Smart Room.</span></p>
+      <div class="chips"><span>HTML5</span><span>CSS3</span><span>Tailwind CSS</span><span>Figma</span><span>ESP32</span><span>MQTT</span><span>Node-RED</span></div>
+    </div>
+    <div class="skill">
+      <h3>Tools &amp; Concepts</h3>
+      <p>I use Git and GitHub for version control on every project, write READMEs and design docs, containerize services with Docker, and structure code with object-oriented design. <span class="where">Every repo on my GitHub.</span></p>
+      <div class="chips"><span>Git</span><span>GitHub</span><span>Docker</span><span>VS Code</span><span>OOP</span></div>
+    </div>
   </div>
 </section>
 
-<div class="panel-cue" id="cue-contact" aria-hidden="true"></div>
-<footer id="contact" class="cover-panel">
-  <div class="footer-inner">
-  <p class="section-label mono">// contact</p>
-  <a href="mailto:sahutsakorn.phir@bumail.net" class="contact-email" id="email-link">
-    sahutsakorn.phir@bumail.net
-    <span class="copy-note mono" id="copy-note">copied</span>
-  </a>
-  <p class="contact-phone mono"><a href="tel:+66992941952">099-294-1952</a></p>
-  <div class="social-row">
-    <a href="https://github.com/haru-mishi" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub">
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.13 8.94 7.48 10.39.55.1.75-.24.75-.53 0-.26-.01-1.13-.02-2.04-3.04.66-3.68-1.3-3.68-1.3-.5-1.26-1.22-1.6-1.22-1.6-.99-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.57 1.2 3.2.91.1-.71.38-1.2.7-1.47-2.43-.28-4.98-1.21-4.98-5.4 0-1.19.42-2.17 1.12-2.93-.11-.28-.49-1.4.11-2.91 0 0 .92-.29 3.01 1.12A10.5 10.5 0 0 1 12 6.1c.93 0 1.87.13 2.75.37 2.09-1.41 3.01-1.12 3.01-1.12.6 1.51.22 2.63.11 2.91.7.76 1.12 1.74 1.12 2.93 0 4.2-2.56 5.12-5 5.39.39.34.74 1.01.74 2.04 0 1.47-.01 2.66-.01 3.02 0 .29.2.64.76.53 4.35-1.45 7.48-5.55 7.48-10.39C23.02 5.24 18.27.5 12 .5Z"/></svg>
-    </a>
-    <a href="https://www.instagram.com/ping_edition/" target="_blank" rel="noopener" class="icon-btn" aria-label="Instagram">
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-        <defs>
-          <linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#FEE411"/>
-            <stop offset="15%" stop-color="#FEDA77"/>
-            <stop offset="35%" stop-color="#F58529"/>
-            <stop offset="55%" stop-color="#DD2A7B"/>
-            <stop offset="75%" stop-color="#8134AF"/>
-            <stop offset="100%" stop-color="#515BD4"/>
-          </linearGradient>
-        </defs>
-        <path fill="url(#igGrad)" d="M12 2c2.71 0 3.05.01 4.12.06 1.07.05 1.79.22 2.43.46.66.26 1.21.6 1.76 1.15.5.5.9 1.1 1.15 1.76.24.64.41 1.36.46 2.43.05 1.07.06 1.41.06 4.12s-.01 3.05-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.9 4.9 0 0 1-1.15 1.76 4.9 4.9 0 0 1-1.76 1.15c-.64.24-1.36.41-2.43.46-1.07.05-1.41.06-4.12.06s-3.05-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.9 4.9 0 0 1-1.76-1.15 4.9 4.9 0 0 1-1.15-1.76c-.24-.64-.41-1.36-.46-2.43C2.01 15.05 2 14.71 2 12s.01-3.05.06-4.12c.05-1.07.22-1.79.46-2.43.26-.66.6-1.21 1.15-1.76a4.9 4.9 0 0 1 1.76-1.15c.64-.24 1.36-.41 2.43-.46C8.95 2.01 9.29 2 12 2Zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.3-.42.16-.72.36-1.03.67-.31.31-.51.61-.67 1.03-.12.32-.26.79-.3 1.66-.05 1.05-.06 1.37-.06 4.04s.01 2.99.06 4.04c.04.87.18 1.34.3 1.66.16.42.36.72.67 1.03.31.31.61.51 1.03.67.32.12.79.26 1.66.3 1.05.05 1.37.06 4.04.06s2.99-.01 4.04-.06c.87-.04 1.34-.18 1.66-.3.42-.16.72-.36 1.03-.67.31-.31.51-.61.67-1.03.12-.32.26-.79.3-1.66.05-1.05.06-1.37.06-4.04s-.01-2.99-.06-4.04c-.04-.87-.18-1.34-.3-1.66a2.7 2.7 0 0 0-.67-1.03 2.7 2.7 0 0 0-1.03-.67c-.32-.12-.79-.26-1.66-.3C14.99 3.81 14.67 3.8 12 3.8Zm0 3.2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4Zm5.2-2.05a1.17 1.17 0 1 1-2.34 0 1.17 1.17 0 0 1 2.34 0Z"/>
-      </svg>
-    </a>
+<!-- ============ CERTIFICATIONS ============ -->
+<section id="certifications">
+  <h2 class="title">Certifications</h2>
+  <div class="certs">
+    <article class="cert">
+      <button type="button" class="cert-img" aria-label="Open certificate full size"><img src="images/certifications/coding-interview.jpg" alt="Master the Coding Interview certificate" loading="lazy"></button>
+      <div>
+        <p class="case-meta">Jul 2026 · Udemy</p>
+        <h3>Master the Coding Interview: Data Structures + Algorithms</h3>
+        <p>A 20-hour course by Andrei Neagoie covering arrays, hash tables, trees, graphs, sorting, recursion, and dynamic programming, and how to reason about time and memory cost (Big-O) in interviews.</p>
+        <a href="https://ude.my/UC-ee92adb3-e28e-4787-a1b9-c3b20921d601" target="_blank" rel="noopener" class="link"><svg><use href="#i-ext"/></svg>Verify certificate</a>
+      </div>
+    </article>
+    <article class="cert">
+      <button type="button" class="cert-img" aria-label="Open certificate full size"><img src="images/certifications/ai-governance.jpg" alt="AI Governance and Ethics certificate" loading="lazy"></button>
+      <div>
+        <p class="case-meta">Dec 2025 · TDGA, Thailand</p>
+        <h3>AI Governance &amp; Ethics</h3>
+        <p>An online course from Thailand's Digital Government Development Agency on the ethics, governance, and legal framework for using AI responsibly: fairness, transparency, privacy, and accountability.</p>
+      </div>
+    </article>
   </div>
-  <p class="foot-note">Bangkok University · last updated · 2026</p>
-  </div>
-</footer>
+</section>
 
-<a href="#home" class="back-to-top-fab" aria-label="Back to top">
-  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
-</a>
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <h2 class="title">Get In Touch</h2>
+  <p class="lead">Open to internships in backend development and AI engineering. The fastest way to reach me is email.</p>
+  <div class="contacts">
+    <a href="mailto:sahutsakorn.phir@bumail.net" class="contact"><svg><use href="#i-mail"/></svg><span><b>Email</b>sahutsakorn.phir@bumail.net</span></a>
+    <a href="tel:+66992941952" class="contact"><svg><use href="#i-phone"/></svg><span><b>Phone</b>+66 99 294 1952</span></a>
+    <a href="https://www.linkedin.com/in/sahutsakorn-phiriyanichakorn/" target="_blank" rel="noopener" class="contact"><svg><use href="#i-linkedin"/></svg><span><b>LinkedIn</b>sahutsakorn-phiriyanichakorn</span></a>
+    <a href="https://github.com/haru-mishi" target="_blank" rel="noopener" class="contact"><svg><use href="#i-github"/></svg><span><b>GitHub</b>haru-mishi</span></a>
+    <a href="https://www.instagram.com/ping_edition/" target="_blank" rel="noopener" class="contact"><svg><use href="#i-instagram"/></svg><span><b>Instagram</b>ping_edition</span></a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">© 2026 Sahutsakorn Phiriyanichakorn · Bangkok, Thailand</footer>
 
 <dialog id="lightbox" class="lightbox">
-  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
-  <button type="button" class="carousel-btn lightbox-btn" id="lightboxPrev" aria-label="Previous image">&larr;</button>
-  <div class="lightbox-main">
-    <div class="lightbox-image" id="lightboxImage"></div>
-    <div class="lightbox-thumbs" id="lightboxThumbs"></div>
-  </div>
-  <button type="button" class="carousel-btn lightbox-btn" id="lightboxNext" aria-label="Next image">&rarr;</button>
+  <button type="button" class="lb-close" aria-label="Close">&times;</button>
+  <button type="button" class="lb-nav lb-prev" aria-label="Previous">&larr;</button>
+  <figure><img alt=""><figcaption></figcaption></figure>
+  <button type="button" class="lb-nav lb-next" aria-label="Next">&rarr;</button>
 </dialog>
 
-<script src="script.js?v=2"></script>
+<script src="script.js?v=6"></script>
 </body>
 </html>
